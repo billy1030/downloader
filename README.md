@@ -31,9 +31,16 @@ You can grab the latest standalone executables directly from the [Releases Page]
 
 | Operating System | Architecture | Package / File |
 | :--- | :--- | :--- |
+| **macOS** (Recommended) | Universal Bundle | [**Omnidrop-macOS.zip**](https://github.com/billy1030/downloader/releases/latest/download/Omnidrop-macOS.zip) *(Unzip and drag `Omnidrop.app` to Applications)* |
 | **Windows** | 64-bit (`x86_64`) | [**Omnidrop-windows-amd64.exe**](https://github.com/billy1030/downloader/releases/latest/download/Omnidrop-windows-amd64.exe) |
-| **macOS** | Apple Silicon (`M1/M2/M3/M4`) | [**Omnidrop-darwin-arm64**](https://github.com/billy1030/downloader/releases/latest/download/Omnidrop-darwin-arm64) |
-| **macOS** | Intel (`x86_64`) | [**Omnidrop-darwin-x86_64**](https://github.com/billy1030/downloader/releases/latest/download/Omnidrop-darwin-x86_64) |
+| **macOS** (CLI / Binary) | Apple Silicon (`M1/M2/M3/M4`) | [**Omnidrop-darwin-arm64**](https://github.com/billy1030/downloader/releases/latest/download/Omnidrop-darwin-arm64) |
+| **macOS** (CLI / Binary) | Intel (`x86_64`) | [**Omnidrop-darwin-x86_64**](https://github.com/billy1030/downloader/releases/latest/download/Omnidrop-darwin-x86_64) |
+
+> [!TIP]
+> **macOS Gatekeeper Note**:
+> Because the app is built without an Apple Developer ID certificate, macOS may show a quarantine notice ("cannot be opened because it is from an unidentified developer") or delete unbundled raw binaries.
+> - **Best Practice**: Download [**Omnidrop-macOS.zip**](https://github.com/billy1030/downloader/releases/latest/download/Omnidrop-macOS.zip), unzip it to get `Omnidrop.app`, and right-click -> **Open** (or run `xattr -cr /Applications/Omnidrop.app`).
+> - For raw CLI binaries, run `chmod +x Omnidrop-darwin-arm64 && xattr -d com.apple.quarantine Omnidrop-darwin-arm64`.
 
 ---
 
