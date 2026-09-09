@@ -1,7 +1,7 @@
 # Requirements: Omnidrop Downloader
 
 **Defined:** 2026-09-09  
-**Core Value:** Reliable, one-click video and audio downloads across TikTok, Instagram, Facebook, X, and YouTube with crisp quality selection and a real-time progress manager.
+**Core Value:** Reliable, one-click video and audio downloads across TikTok, Douyin, Instagram, Facebook, X, and YouTube with crisp quality selection and a real-time progress manager.
 
 ## v1 Requirements
 
@@ -11,9 +11,10 @@ Requirements for initial release, sliced into coarse delivery phases.
 
 - [ ] **PLAT-01**: User can parse and extract video metadata (title, author, thumbnail, formats) from YouTube URLs (standard videos, Shorts).
 - [ ] **PLAT-02**: User can parse and extract media from TikTok URLs (watermark-free video, audio).
-- [ ] **PLAT-03**: User can parse and extract media from Instagram URLs (Reels, Feed video/photo posts).
-- [ ] **PLAT-04**: User can parse and extract media from X (Twitter) URLs.
-- [ ] **PLAT-05**: User can parse and extract media from Facebook public video/Reel URLs.
+- [ ] **PLAT-03**: User can parse and extract media from Douyin URLs (videos, slide notes, audio).
+- [ ] **PLAT-04**: User can parse and extract media from Instagram URLs (Reels, Feed video/photo posts).
+- [ ] **PLAT-05**: User can parse and extract media from X (Twitter) URLs.
+- [ ] **PLAT-06**: User can parse and extract media from Facebook public video/Reel URLs.
 
 ### Format & Conversion (FMT)
 
@@ -63,6 +64,7 @@ Deferred to future release.
 | PLAT-03 | Phase 1 | Pending |
 | PLAT-04 | Phase 1 | Pending |
 | PLAT-05 | Phase 1 | Pending |
+| PLAT-06 | Phase 1 | Pending |
 | FMT-01 | Phase 1 | Pending |
 | FMT-02 | Phase 1 | Pending |
 | FMT-03 | Phase 1 | Pending |
@@ -76,8 +78,8 @@ Deferred to future release.
 | DESK-04 | Phase 3 | Pending |
 
 **Coverage:**
-- v1 requirements: 16 total
-- Mapped to phases: 16
+- v1 requirements: 17 total
+- Mapped to phases: 17
 - Unmapped: 0 ✓
 
 ---
