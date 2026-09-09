@@ -1,6 +1,4 @@
 # Binaries
-bin/
-*.exe
 *.dll
 *.so
 *.dylib
