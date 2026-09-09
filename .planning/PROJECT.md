@@ -16,7 +16,7 @@ Reliable, one-click video and audio downloads across all major social media plat
 
 ### Active
 
-- [ ] Multi-Platform URL Support: TikTok, Instagram (Reels/Posts/Stories), Facebook, X, and YouTube (Videos/Shorts/Playlists)
+- [ ] Multi-Platform URL Support: TikTok, Douyin, Instagram (Reels/Posts/Stories), Facebook, X, and YouTube (Videos/Shorts/Playlists)
 - [ ] Format & Quality Engine: Resolution picker (4K, 1080p, 720p, etc.) and audio-only extraction (MP3, M4A) with auto-merging via ffmpeg
 - [ ] Clipboard Auto-Detection: Instantly detects supported URLs copied to clipboard and prompts for download
 - [ ] Download & Queue Manager: Concurrent downloads, pause/resume, cancel, retry, and progress status (speed, ETA, size)
