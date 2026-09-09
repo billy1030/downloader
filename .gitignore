@@ -21,3 +21,8 @@ frontend/node_modules/
 # Planning
 .planning/
 planning/
+
+# Secrets & Authentication
+*cookie*.txt
+*.cookies
+
