@@ -136,7 +136,7 @@ export const bridge = {
       proxy: '',
       clipboard_auto_detect: true,
       default_audio_format: 'mp3',
-      theme: 'dark',
+      theme: 'day',
     };
   },
 

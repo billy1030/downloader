@@ -53,7 +53,7 @@ func NewStore() *Store {
 			Proxy:               "",
 			ClipboardAutoDetect: true,
 			DefaultAudioFormat:  "mp3",
-			Theme:               "dark",
+			Theme:               "day",
 		},
 	}
 
