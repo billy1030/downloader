@@ -40,7 +40,12 @@ func Download(ctx context.Context, env *Environment, opts models.DownloadOptions
 		"--newline",
 		"--no-colors",
 		"--progress-template", progressTemplate,
+		"--print", "after_move:FINAL_PATH:%(filepath)s",
 		"-o", outputTemplate,
+	}
+
+	if env.NodePath != "" {
+		args = append(args, "--js-runtimes", fmt.Sprintf("node:%s", env.NodePath))
 	}
 
 	// Cookies
@@ -61,7 +66,8 @@ func Download(ctx context.Context, env *Environment, opts models.DownloadOptions
 	args = append(args, BuildFormatArgs(opts)...)
 
 	// Target URL
-	args = append(args, opts.URL)
+	cleanURL := NormalizeMediaURL(opts.URL)
+	args = append(args, cleanURL)
 
 	cmd := exec.CommandContext(ctx, env.YtDlpPath, args...)
 	// Process group isolation for clean cancellation
@@ -94,10 +100,17 @@ func Download(ctx context.Context, env *Environment, opts models.DownloadOptions
 		}
 	}()
 
+	var finalFilePath string
+
 	scanner := bufio.NewScanner(stdout)
 	for scanner.Scan() {
 		line := strings.TrimSpace(scanner.Text())
 		if line == "" {
+			continue
+		}
+
+		if strings.HasPrefix(line, "FINAL_PATH:") {
+			finalFilePath = strings.TrimPrefix(line, "FINAL_PATH:")
 			continue
 		}
 
@@ -138,8 +151,9 @@ func Download(ctx context.Context, env *Environment, opts models.DownloadOptions
 
 	if onProgress != nil {
 		onProgress(models.DownloadProgress{
-			Percent: 100.0,
-			Status:  "finished",
+			Percent:  100.0,
+			Filename: filepath.Base(finalFilePath),
+			Status:   "finished",
 		})
 	}
 

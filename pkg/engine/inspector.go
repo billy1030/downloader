@@ -50,6 +50,10 @@ func InspectURL(ctx context.Context, env *Environment, rawURL string, cookies st
 		"--skip-download",
 	}
 
+	if env.NodePath != "" {
+		args = append(args, "--js-runtimes", fmt.Sprintf("node:%s", env.NodePath))
+	}
+
 	if cookies != "" {
 		if strings.HasPrefix(cookies, "browser:") {
 			browser := strings.TrimPrefix(cookies, "browser:")
@@ -59,7 +63,8 @@ func InspectURL(ctx context.Context, env *Environment, rawURL string, cookies st
 		}
 	}
 
-	args = append(args, rawURL)
+	cleanURL := NormalizeMediaURL(rawURL)
+	args = append(args, cleanURL)
 
 	cmd := exec.CommandContext(ctx, env.YtDlpPath, args...)
 	var stdout, stderr bytes.Buffer

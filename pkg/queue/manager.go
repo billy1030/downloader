@@ -242,6 +242,14 @@ func (m *Manager) runTask(t *Task) {
 	} else {
 		t.Status = StatusCompleted
 		t.Progress.Percent = 100.0
+		t.Progress.Status = "finished"
+
+		// If OutputPath is empty or file doesn't exist (e.g. extension changed from webm to mp3/mp4 during muxing), find it in OutputDir
+		if t.OutputPath == "" {
+			if matches, _ := filepath.Glob(filepath.Join(t.Options.OutputDir, "*")); len(matches) > 0 {
+				t.OutputPath = matches[len(matches)-1]
+			}
+		}
 	}
 
 	m.emit(QueueEvent{Type: "task_updated", Task: *t})

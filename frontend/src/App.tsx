@@ -17,6 +17,7 @@ export default function App() {
   const [audioFmt, setAudioFmt] = useState('mp3');
 
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [taskViewLimit, setTaskViewLimit] = useState<'recent5' | 'all'>('recent5');
   const [settings, setSettings] = useState<AppSettings | null>(null);
   const [currentTheme, setCurrentTheme] = useState<ThemeMode>('day');
   const [showSettings, setShowSettings] = useState(false);
@@ -36,17 +37,41 @@ export default function App() {
         setCurrentTheme('day');
       }
     });
-    bridge.getTasks().then(setTasks);
+
+    // Helper to merge and sort tasks newest first
+    const mergeTasks = (existing: Task[], incoming: Task[]): Task[] => {
+      const map = new Map<string, Task>();
+      // Preserve existing
+      for (const t of existing) {
+        map.set(t.id, t);
+      }
+      // Upsert incoming
+      for (const t of incoming) {
+        map.set(t.id, t);
+      }
+      return Array.from(map.values()).sort((a, b) => {
+        const timeA = new Date(a.created_at || 0).getTime();
+        const timeB = new Date(b.created_at || 0).getTime();
+        return timeB - timeA;
+      });
+    };
+
+    bridge.getTasks().then(initialTasks => {
+      if (initialTasks && Array.isArray(initialTasks)) {
+        setTasks(prev => mergeTasks(prev, initialTasks));
+      }
+    });
 
     // Listen to queue events from Go backend
     const unbindQueue = bridge.onQueueEvent((evt: { type: string; task: Task }) => {
       if (!evt || !evt.task) return;
       setTasks(prev => {
-        const idx = prev.findIndex(t => t.id === evt.task.id);
         if (evt.type === 'task_removed') {
           return prev.filter(t => t.id !== evt.task.id);
         }
+        const idx = prev.findIndex(t => t.id === evt.task.id);
         if (idx === -1) {
+          // Put new task at the top
           return [evt.task, ...prev];
         }
         const updated = [...prev];
@@ -103,11 +128,13 @@ export default function App() {
         audioFmt
       );
       if (newTask) {
-        setTasks(prev => [newTask, ...prev.filter(t => t.id !== newTask.id)]);
+        setTasks(prev => {
+          const filtered = prev.filter(t => t.id !== newTask.id);
+          return [newTask, ...filtered];
+        });
       }
       setInspectModal(null);
       setUrlInput('');
-      bridge.getTasks().then(setTasks);
     } catch (err: any) {
       alert(`Failed to enqueue: ${err?.message || err}`);
     }
@@ -140,6 +167,7 @@ export default function App() {
   const t = themes[currentTheme] || themes.day;
   const activeCount = tasks.filter(t => t.status === 'downloading' || t.status === 'queued').length;
   const completedCount = tasks.filter(t => t.status === 'completed').length;
+  const visibleTasks = taskViewLimit === 'recent5' ? tasks.slice(0, 5) : tasks;
 
   return (
     <div className={`flex flex-col h-screen ${t.bg} ${t.textPrimary} transition-colors duration-200`}>
@@ -149,13 +177,11 @@ export default function App() {
         className={`h-16 border-b ${t.headerBorder} ${t.headerBg} backdrop-blur-md pl-[110px] pr-6 flex items-center justify-between z-10 shrink-0 select-none`}
       >
         <div style={{ '--wails-draggable': 'no-drag' } as any} className="flex items-center gap-3">
-          <div className={`w-10 h-10 rounded-xl flex items-center justify-center shadow-lg transition-colors ${
-            currentTheme === 'warm'
-              ? 'bg-gradient-to-tr from-amber-600 to-amber-500 shadow-amber-500/25'
-              : 'bg-gradient-to-tr from-indigo-600 via-indigo-500 to-purple-500 shadow-indigo-500/25'
-          }`}>
-            <ArrowDownToLine className="w-5 h-5 text-white" />
-          </div>
+          <img 
+            src="./appicon.png" 
+            alt="Omnidrop" 
+            className="w-10 h-10 rounded-xl shadow-lg object-cover ring-1 ring-white/10" 
+          />
           <div>
             <h1 className="font-bold text-lg tracking-tight">
               Omnidrop
@@ -311,6 +337,31 @@ export default function App() {
                 {activeCount} Active • {completedCount} Done
               </span>
             </div>
+
+            {tasks.length > 5 && (
+              <div className={`flex items-center p-0.5 rounded-lg border ${t.cardBorder} ${t.bgSubtle} text-xs`}>
+                <button
+                  onClick={() => setTaskViewLimit('recent5')}
+                  className={`px-2.5 py-1 rounded-md transition font-medium ${
+                    taskViewLimit === 'recent5'
+                      ? 'bg-white dark:bg-slate-800 shadow text-indigo-600 font-semibold'
+                      : `${t.textSecondary} hover:${t.textPrimary}`
+                  }`}
+                >
+                  Recent 5
+                </button>
+                <button
+                  onClick={() => setTaskViewLimit('all')}
+                  className={`px-2.5 py-1 rounded-md transition font-medium ${
+                    taskViewLimit === 'all'
+                      ? 'bg-white dark:bg-slate-800 shadow text-indigo-600 font-semibold'
+                      : `${t.textSecondary} hover:${t.textPrimary}`
+                  }`}
+                >
+                  All ({tasks.length})
+                </button>
+              </div>
+            )}
           </div>
 
           {tasks.length === 0 ? (
@@ -321,7 +372,7 @@ export default function App() {
             </div>
           ) : (
             <div className="space-y-3">
-              {tasks.map(task => (
+              {visibleTasks.map(task => (
                 <div 
                   key={task.id}
                   className={`border ${t.cardBorder} ${t.card} ${t.cardHover} rounded-xl p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 transition-all`}
@@ -379,32 +430,36 @@ export default function App() {
 
                   {/* Actions */}
                   <div className="flex items-center gap-2 shrink-0 self-end md:self-center">
-                    {task.status === 'completed' && task.output_path && (
+                    {(task.status === 'completed' || task.progress?.percent >= 100 || task.progress?.status === 'finished') ? (
                       <>
                         <button
-                          onClick={() => bridge.openFile(task.output_path!)}
+                          onClick={() => {
+                            const target = task.output_path || task.options?.OutputDir || '';
+                            if (target) bridge.openFile(target);
+                          }}
                           className={`px-3 py-1.5 rounded-lg border ${t.cardBorder} ${t.bgSubtle} hover:${t.card} text-xs font-semibold flex items-center gap-1.5 transition ${t.accent}`}
                         >
                           <Play className="w-3.5 h-3.5" /> Open
                         </button>
                         <button
-                          onClick={() => bridge.revealFile(task.output_path!)}
+                          onClick={() => {
+                            const target = task.output_path || task.options?.OutputDir || '';
+                            if (target) bridge.revealFile(target);
+                          }}
                           className={`p-1.5 rounded-lg border ${t.cardBorder} ${t.bgSubtle} hover:${t.card} ${t.textSecondary} transition`}
                           title="Show in Finder / Explorer"
                         >
                           <Folder className="w-4 h-4" />
                         </button>
                       </>
-                    )}
-
-                    {task.status === 'downloading' && (
+                    ) : task.status === 'downloading' ? (
                       <button
                         onClick={() => bridge.cancelTask(task.id)}
                         className="px-3 py-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 text-xs font-semibold transition"
                       >
                         Cancel
                       </button>
-                    )}
+                    ) : null}
 
                     <button
                       onClick={() => bridge.removeTask(task.id)}
@@ -654,13 +709,42 @@ export default function App() {
                   )}
                 </div>
                 <p className={`text-[11px] ${t.textSecondary}`}>
-                  Bypass YouTube "Sign in to confirm you're not a bot" checks or access member/age-restricted media.
+                  Bypass YouTube "Sign in to confirm you're not a bot" checks. Choose direct browser cookies (Chrome, Brave, Edge, Safari) or import a cookies.txt file.
                 </p>
-                <div className="flex items-center gap-2">
+
+                {/* Quick Browser Cookie Presets */}
+                <div className="flex flex-wrap items-center gap-1.5 pt-1">
+                  <span className={`text-[11px] font-medium ${t.textMuted} mr-1`}>Quick Preset:</span>
+                  {[
+                    { id: 'browser:chrome', label: '🌐 Chrome' },
+                    { id: 'browser:brave', label: '🦁 Brave' },
+                    { id: 'browser:edge', label: '🌊 Edge' },
+                    { id: 'browser:safari', label: '🧭 Safari' },
+                  ].map(b => (
+                    <button
+                      key={b.id}
+                      type="button"
+                      onClick={() => {
+                        const updated = { ...settings, cookie_file: b.id };
+                        setSettings(updated);
+                        bridge.saveSettings(updated);
+                      }}
+                      className={`px-2.5 py-1 rounded-lg text-xs font-medium border transition ${
+                        settings.cookie_file === b.id
+                          ? `${t.accent} border-indigo-500 bg-indigo-500/10 font-semibold`
+                          : `${t.bgSubtle} ${t.textSecondary} ${t.cardBorder} hover:${t.textPrimary}`
+                      }`}
+                    >
+                      {b.label}
+                    </button>
+                  ))}
+                </div>
+
+                <div className="flex items-center gap-2 pt-1">
                   <input
                     type="text"
                     readOnly
-                    placeholder="No cookies file selected"
+                    placeholder="No cookies or browser selected"
                     value={settings.cookie_file || ''}
                     className={`flex-1 ${t.inputBg} border ${t.inputBorder} rounded-xl px-3 py-2 text-xs ${t.textSecondary} font-mono truncate`}
                   />
