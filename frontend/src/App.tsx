@@ -94,7 +94,7 @@ export default function App() {
   const handleStartDownload = async () => {
     if (!inspectModal) return;
     try {
-      await bridge.enqueueDownload(
+      const newTask = await bridge.enqueueDownload(
         inspectModal.url,
         inspectModal.title,
         inspectModal.thumbnail,
@@ -102,8 +102,12 @@ export default function App() {
         audioOnly,
         audioFmt
       );
+      if (newTask) {
+        setTasks(prev => [newTask, ...prev.filter(t => t.id !== newTask.id)]);
+      }
       setInspectModal(null);
       setUrlInput('');
+      bridge.getTasks().then(setTasks);
     } catch (err: any) {
       alert(`Failed to enqueue: ${err?.message || err}`);
     }
