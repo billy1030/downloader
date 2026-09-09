@@ -36,11 +36,31 @@ You can grab the latest standalone executables directly from the [Releases Page]
 | **macOS** (CLI / Binary) | Apple Silicon (`M1/M2/M3/M4`) | [**Omnidrop-darwin-arm64**](https://github.com/billy1030/downloader/releases/latest/download/Omnidrop-darwin-arm64) |
 | **macOS** (CLI / Binary) | Intel (`x86_64`) | [**Omnidrop-darwin-x86_64**](https://github.com/billy1030/downloader/releases/latest/download/Omnidrop-darwin-x86_64) |
 
-> [!TIP]
-> **macOS Gatekeeper Note**:
-> Because the app is built without an Apple Developer ID certificate, macOS may show a quarantine notice ("cannot be opened because it is from an unidentified developer") or delete unbundled raw binaries.
-> - **Best Practice**: Download [**Omnidrop-macOS.zip**](https://github.com/billy1030/downloader/releases/latest/download/Omnidrop-macOS.zip), unzip it to get `Omnidrop.app`, and right-click -> **Open** (or run `xattr -cr /Applications/Omnidrop.app`).
-> - For raw CLI binaries, run `chmod +x Omnidrop-darwin-arm64 && xattr -d com.apple.quarantine Omnidrop-darwin-arm64`.
+---
+
+## 🍏 macOS Installation Guide
+
+Follow these simple steps to install and run Omnidrop on macOS (Apple Silicon M1/M2/M3/M4 or Intel):
+
+### Step 1: Download & Extract
+1. Download [**Omnidrop-macOS.zip**](https://github.com/billy1030/downloader/releases/latest/download/Omnidrop-macOS.zip) from the latest release.
+2. Double-click the downloaded zip file in your `Downloads` folder to extract **`Omnidrop.app`**.
+3. Drag and drop **`Omnidrop.app`** into your **`/Applications`** folder.
+
+### Step 2: First-Time Launch (Bypassing Gatekeeper)
+Because Omnidrop is an open-source tool built without a paid Apple Developer certificate, macOS Gatekeeper may show a warning on first launch:
+
+**Option A (GUI - Easiest)**:
+1. Open your **Applications** folder in Finder.
+2. **Right-click (or Control-click)** on `Omnidrop.app` and select **Open**.
+3. Click **Open** in the confirmation dialog. You only need to do this once!
+
+**Option B (Terminal - One-liner)**:
+If macOS blocks or prevents opening, open Terminal and run:
+```bash
+xattr -cr /Applications/Omnidrop.app
+```
+Then double-click `Omnidrop.app` to launch normally anytime.
 
 ---
 
