@@ -24,16 +24,19 @@ func main() {
 		AssetServer: &assetserver.Options{
 			Assets: assets,
 		},
-		BackgroundColour: &options.RGBA{R: 7, G: 9, B: 14, A: 255},
+		BackgroundColour: &options.RGBA{R: 248, G: 250, B: 252, A: 255},
 		OnStartup:        app.startup,
 		OnShutdown:       app.shutdown,
 		Bind: []interface{}{
 			app,
 		},
+		Debug: options.Debug{
+			OpenInspectorOnStartup: false,
+		},
 		Mac: &mac.Options{
 			TitleBar:             mac.TitleBarHiddenInset(),
-			WebviewIsTransparent: true,
-			Appearance:           mac.NSAppearanceNameDarkAqua,
+			WebviewIsTransparent: false,
+			Appearance:           mac.DefaultAppearance,
 		},
 	})
 

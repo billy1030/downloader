@@ -142,7 +142,7 @@ export default function App() {
       {/* Top Navbar */}
       <header 
         style={{ '--wails-draggable': 'drag' } as any}
-        className={`h-16 border-b ${t.headerBorder} ${t.headerBg} backdrop-blur-md pl-20 pr-6 flex items-center justify-between z-10 shrink-0 select-none`}
+        className={`h-16 border-b ${t.headerBorder} ${t.headerBg} backdrop-blur-md pl-[110px] pr-6 flex items-center justify-between z-10 shrink-0 select-none`}
       >
         <div style={{ '--wails-draggable': 'no-drag' } as any} className="flex items-center gap-3">
           <div className={`w-10 h-10 rounded-xl flex items-center justify-center shadow-lg transition-colors ${
