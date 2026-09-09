@@ -12,6 +12,10 @@
     <img src="https://img.shields.io/badge/Platform-macOS%20%7C%20Windows-blue?style=for-the-badge" alt="Platform" />
     <img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="License" />
   </p>
+
+  <p align="center">
+    <img src="./docs/assets/omnidrop_app_preview.png" alt="Omnidrop Interface Preview" width="760" style="border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.15);" />
+  </p>
 </div>
 
 ---
