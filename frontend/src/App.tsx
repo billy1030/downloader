@@ -713,31 +713,33 @@ export default function App() {
                 </p>
 
                 {/* Quick Browser Cookie Presets */}
-                <div className="flex flex-wrap items-center gap-1.5 pt-1">
-                  <span className={`text-[11px] font-medium ${t.textMuted} mr-1`}>Quick Preset:</span>
-                  {[
-                    { id: 'browser:chrome', label: '🌐 Chrome' },
-                    { id: 'browser:brave', label: '🦁 Brave' },
-                    { id: 'browser:edge', label: '🌊 Edge' },
-                    { id: 'browser:safari', label: '🧭 Safari' },
-                  ].map(b => (
-                    <button
-                      key={b.id}
-                      type="button"
-                      onClick={() => {
-                        const updated = { ...settings, cookie_file: b.id };
-                        setSettings(updated);
-                        bridge.saveSettings(updated);
-                      }}
-                      className={`px-2.5 py-1 rounded-lg text-xs font-medium border transition ${
-                        settings.cookie_file === b.id
-                          ? `${t.accent} border-indigo-500 bg-indigo-500/10 font-semibold`
-                          : `${t.bgSubtle} ${t.textSecondary} ${t.cardBorder} hover:${t.textPrimary}`
-                      }`}
-                    >
-                      {b.label}
-                    </button>
-                  ))}
+                <div className="pt-1">
+                  <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5">
+                    <span className={`text-[11px] font-medium ${t.textMuted} shrink-0 mr-0.5`}>Preset:</span>
+                    {[
+                      { id: 'browser:chrome', label: '🌐 Chrome' },
+                      { id: 'browser:brave', label: '🦁 Brave' },
+                      { id: 'browser:edge', label: '🌊 Edge' },
+                      { id: 'browser:safari', label: '🧭 Safari' },
+                    ].map(b => (
+                      <button
+                        key={b.id}
+                        type="button"
+                        onClick={() => {
+                          const updated = { ...settings, cookie_file: b.id };
+                          setSettings(updated);
+                          bridge.saveSettings(updated);
+                        }}
+                        className={`px-2 py-1 rounded-lg text-xs font-medium border shrink-0 transition whitespace-nowrap ${
+                          settings.cookie_file === b.id
+                            ? `${t.accent} border-indigo-500 bg-indigo-500/10 font-semibold`
+                            : `${t.bgSubtle} ${t.textSecondary} ${t.cardBorder} hover:${t.textPrimary}`
+                        }`}
+                      >
+                        {b.label}
+                      </button>
+                    ))}
+                  </div>
                 </div>
 
                 <div className="flex items-center gap-2 pt-1">
