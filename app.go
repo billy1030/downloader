@@ -84,7 +84,8 @@ func (a *App) InspectURL(url string) (*models.MediaInfo, error) {
 	if a.env == nil || a.env.YtDlpPath == "" {
 		return nil, fmt.Errorf("yt-dlp is not installed or detected")
 	}
-	return engine.InspectURL(a.ctx, a.env, url, "")
+	settings := a.configStore.Get()
+	return engine.InspectURL(a.ctx, a.env, url, settings.CookieFile)
 }
 
 // EnqueueDownload schedules a media download
@@ -96,6 +97,7 @@ func (a *App) EnqueueDownload(url, title, thumbnail, resolution string, audioOnl
 		Resolution: resolution,
 		AudioOnly:  audioOnly,
 		AudioFmt:   audioFmt,
+		Cookies:    settings.CookieFile,
 		Proxy:      settings.Proxy,
 	}
 
@@ -150,6 +152,16 @@ func (a *App) SaveSettings(settings config.AppSettings) error {
 func (a *App) SelectDirectory() (string, error) {
 	return runtime.OpenDirectoryDialog(a.ctx, runtime.OpenDialogOptions{
 		Title: "Select Download Directory",
+	})
+}
+
+// SelectCookieFile opens file picker for Netscape cookies.txt
+func (a *App) SelectCookieFile() (string, error) {
+	return runtime.OpenFileDialog(a.ctx, runtime.OpenDialogOptions{
+		Title: "Select Netscape cookies.txt file",
+		Filters: []runtime.FileFilter{
+			{DisplayName: "Text Files (*.txt)", Pattern: "*.txt"},
+		},
 	})
 }
 

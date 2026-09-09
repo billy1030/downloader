@@ -629,6 +629,51 @@ export default function App() {
                 />
               </div>
 
+              {/* Cookie / Authentication */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <label className={`text-xs font-semibold ${t.textPrimary}`}>Authentication / Cookies</label>
+                  {settings.cookie_file && (
+                    <button
+                      onClick={() => {
+                        const updated = { ...settings, cookie_file: '' };
+                        setSettings(updated);
+                        bridge.saveSettings(updated);
+                      }}
+                      className="text-[11px] text-rose-500 hover:underline"
+                    >
+                      Clear
+                    </button>
+                  )}
+                </div>
+                <p className={`text-[11px] ${t.textSecondary}`}>
+                  Bypass YouTube "Sign in to confirm you're not a bot" checks or access member/age-restricted media.
+                </p>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="text"
+                    readOnly
+                    placeholder="No cookies file selected"
+                    value={settings.cookie_file || ''}
+                    className={`flex-1 ${t.inputBg} border ${t.inputBorder} rounded-xl px-3 py-2 text-xs ${t.textSecondary} font-mono truncate`}
+                  />
+                  <button
+                    onClick={async () => {
+                      const file = await bridge.selectCookieFile();
+                      if (file) {
+                        const updated = { ...settings, cookie_file: file };
+                        setSettings(updated);
+                        bridge.saveSettings(updated);
+                      }
+                    }}
+                    className={`px-3 py-2 ${t.bgSubtle} hover:${t.card} border ${t.cardBorder} rounded-xl text-xs font-semibold ${t.textSecondary}`}
+                    title="Import Netscape cookies.txt"
+                  >
+                    Select .txt
+                  </button>
+                </div>
+              </div>
+
               {/* Engine Updater Box */}
               <div className={`p-4 rounded-xl ${t.bgSubtle} border ${t.cardBorder} space-y-3`}>
                 <div className="flex items-center justify-between">

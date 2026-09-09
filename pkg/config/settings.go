@@ -15,6 +15,7 @@ type AppSettings struct {
 	ClipboardAutoDetect bool   `json:"clipboard_auto_detect"`
 	DefaultAudioFormat  string `json:"default_audio_format"`
 	Theme               string `json:"theme"`
+	CookieFile          string `json:"cookie_file"`
 }
 
 // Store handles persistence of settings
@@ -80,6 +81,7 @@ func (s *Store) load() {
 			if loaded.Theme != "" {
 				s.settings.Theme = loaded.Theme
 			}
+			s.settings.CookieFile = loaded.CookieFile
 		}
 	}
 	_ = os.MkdirAll(s.settings.OutputDir, 0755)

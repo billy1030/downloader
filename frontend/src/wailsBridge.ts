@@ -16,6 +16,7 @@ declare global {
           GetSettings: () => Promise<AppSettings>;
           SaveSettings: (settings: AppSettings) => Promise<void>;
           SelectDirectory: () => Promise<string>;
+          SelectCookieFile: () => Promise<string>;
           UpdateEngine: () => Promise<{ success: boolean; message: string; version: string }>;
         };
       };
@@ -151,6 +152,13 @@ export const bridge = {
       return window.go.main.App.SelectDirectory();
     }
     return '~/Downloads/Omnidrop';
+  },
+
+  selectCookieFile: async (): Promise<string> => {
+    if (window.go?.main?.App?.SelectCookieFile) {
+      return window.go.main.App.SelectCookieFile();
+    }
+    return '';
   },
 
   updateEngine: async (): Promise<{ success: boolean; message: string; version: string }> => {

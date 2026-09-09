@@ -70,6 +70,7 @@ export interface AppSettings {
   clipboard_auto_detect: boolean;
   default_audio_format: string;
   theme: string;
+  cookie_file?: string;
 }
 
 export interface EnvironmentInfo {
