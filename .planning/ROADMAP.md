@@ -8,7 +8,7 @@ Omnidrop Downloader is built in 3 coarse phases from the ground up: starting wit
 
 - [x] **Phase 1: Core Extraction - [ ] **Phase 1: Core Extraction & Download Engine** Download Engine** - Go backend wrapper over yt-dlp & ffmpeg with multi-platform URL inspection and quality remuxing
 - [x] **Phase 2: Queue - [ ] **Phase 2: Queue & Concurrency Management** Concurrency Management** - Worker pool, job states, live progress streaming, pause/resume, and file system integration
-- [ ] **Phase 3: Wails Desktop Application & UX** - Native desktop window, modern dark-mode frontend, clipboard auto-detection, and engine self-updater
+- [x] **Phase 3: Wails Desktop Application - [ ] **Phase 3: Wails Desktop Application & UX** UX** - Native desktop window, modern dark-mode frontend, clipboard auto-detection, and engine self-updater
 
 ## Phase Details
 
@@ -53,8 +53,8 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 03-01: Wails v2 project setup, Go-to-Frontend IPC binding, clipboard watcher, and updater service
-- [ ] 03-02: Modern desktop UI implementation (React/Tailwind), quality modal, queue cards, and settings drawer
+- [x] 03-01: Wails v2 project setup, Go-to-Frontend IPC binding, clipboard watcher, and updater service
+- [x] 03-02: Modern desktop UI implementation (React/Tailwind), quality modal, queue cards, and settings drawer
 
 ## Progress
 
@@ -65,7 +65,7 @@ Phases execute in numeric order: 1 → 2 → 3
 |-------|----------------|--------|-----------|
 | 1. Core Extraction | 1. Core Extraction & Download Engine | 0/2 | Not started | - | Download Engine | 2/2 | Complete | 2026-09-09 |
 | 2. Queue | 2. Queue & Concurrency Management | 0/2 | Not started | - | Concurrency Management | 2/2 | Complete | 2026-09-09 |
-| 3. Wails Desktop Application & UX | 0/2 | Not started | - |
+| 3. Wails Desktop Application | 3. Wails Desktop Application & UX | 0/2 | Not started | - | UX | 2/2 | Complete | 2026-09-09 |
 
 ---
 *Roadmap created: 2026-09-09*

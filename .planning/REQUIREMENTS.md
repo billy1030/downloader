@@ -31,10 +31,10 @@ Requirements for initial release, sliced into coarse delivery phases.
 
 ### Desktop UI & Automation (DESK)
 
-- [ ] **DESK-01**: Standalone desktop window interface built with Go and Wails v2 with polished dark mode theme.
-- [ ] **DESK-02**: Automatic clipboard monitor that detects supported media links and offers instant one-click download.
-- [ ] **DESK-03**: Settings view to configure default download directory, max concurrent downloads, and proxy settings.
-- [ ] **DESK-04**: In-app one-click check and update mechanism for the embedded yt-dlp engine to withstand platform breakages.
+- [x] **DESK-01**: Standalone desktop window interface built with Go and Wails v2 with polished dark mode theme.
+- [x] **DESK-02**: Automatic clipboard monitor that detects supported media links and offers instant one-click download.
+- [x] **DESK-03**: Settings view to configure default download directory, max concurrent downloads, and proxy settings.
+- [x] **DESK-04**: In-app one-click check and update mechanism for the embedded yt-dlp engine to withstand platform breakages.
 
 ## v2 Requirements
 
@@ -72,10 +72,10 @@ Deferred to future release.
 | QMAN-02 | Phase 2 | Complete |
 | QMAN-03 | Phase 2 | Complete |
 | QMAN-04 | Phase 2 | Complete |
-| DESK-01 | Phase 3 | Pending |
-| DESK-02 | Phase 3 | Pending |
-| DESK-03 | Phase 3 | Pending |
-| DESK-04 | Phase 3 | Pending |
+| DESK-01 | Phase 3 | Complete |
+| DESK-02 | Phase 3 | Complete |
+| DESK-03 | Phase 3 | Complete |
+| DESK-04 | Phase 3 | Complete |
 
 **Coverage:**
 - v1 requirements: 17 total
