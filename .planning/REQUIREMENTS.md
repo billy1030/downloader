@@ -9,18 +9,18 @@ Requirements for initial release, sliced into coarse delivery phases.
 
 ### Platform Extraction (PLAT)
 
-- [ ] **PLAT-01**: User can parse and extract video metadata (title, author, thumbnail, formats) from YouTube URLs (standard videos, Shorts).
-- [ ] **PLAT-02**: User can parse and extract media from TikTok URLs (watermark-free video, audio).
-- [ ] **PLAT-03**: User can parse and extract media from Douyin URLs (videos, slide notes, audio).
-- [ ] **PLAT-04**: User can parse and extract media from Instagram URLs (Reels, Feed video/photo posts).
-- [ ] **PLAT-05**: User can parse and extract media from X (Twitter) URLs.
-- [ ] **PLAT-06**: User can parse and extract media from Facebook public video/Reel URLs.
+- [x] **PLAT-01**: User can parse and extract video metadata (title, author, thumbnail, formats) from YouTube URLs (standard videos, Shorts).
+- [x] **PLAT-02**: User can parse and extract media from TikTok URLs (watermark-free video, audio).
+- [x] **PLAT-03**: User can parse and extract media from Douyin URLs (videos, slide notes, audio).
+- [x] **PLAT-04**: User can parse and extract media from Instagram URLs (Reels, Feed video/photo posts).
+- [x] **PLAT-05**: User can parse and extract media from X (Twitter) URLs.
+- [x] **PLAT-06**: User can parse and extract media from Facebook public video/Reel URLs.
 
 ### Format & Conversion (FMT)
 
-- [ ] **FMT-01**: User can select target video resolution (Best, 4K, 1440p, 1080p, 720p, 480p).
-- [ ] **FMT-02**: User can select audio-only extraction format (MP3, M4A) with bitrate control.
-- [ ] **FMT-03**: Engine automatically muxes separate video and audio streams via ffmpeg seamlessly.
+- [x] **FMT-01**: User can select target video resolution (Best, 4K, 1440p, 1080p, 720p, 480p).
+- [x] **FMT-02**: User can select audio-only extraction format (MP3, M4A) with bitrate control.
+- [x] **FMT-03**: Engine automatically muxes separate video and audio streams via ffmpeg seamlessly.
 
 ### Queue & Download Management (QMAN)
 
@@ -59,15 +59,15 @@ Deferred to future release.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| PLAT-01 | Phase 1 | Pending |
-| PLAT-02 | Phase 1 | Pending |
-| PLAT-03 | Phase 1 | Pending |
-| PLAT-04 | Phase 1 | Pending |
-| PLAT-05 | Phase 1 | Pending |
-| PLAT-06 | Phase 1 | Pending |
-| FMT-01 | Phase 1 | Pending |
-| FMT-02 | Phase 1 | Pending |
-| FMT-03 | Phase 1 | Pending |
+| PLAT-01 | Phase 1 | Complete |
+| PLAT-02 | Phase 1 | Complete |
+| PLAT-03 | Phase 1 | Complete |
+| PLAT-04 | Phase 1 | Complete |
+| PLAT-05 | Phase 1 | Complete |
+| PLAT-06 | Phase 1 | Complete |
+| FMT-01 | Phase 1 | Complete |
+| FMT-02 | Phase 1 | Complete |
+| FMT-03 | Phase 1 | Complete |
 | QMAN-01 | Phase 2 | Pending |
 | QMAN-02 | Phase 2 | Pending |
 | QMAN-03 | Phase 2 | Pending |

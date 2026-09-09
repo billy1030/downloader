@@ -6,7 +6,7 @@ Omnidrop Downloader is built in 3 coarse phases from the ground up: starting wit
 
 ## Phases
 
-- [ ] **Phase 1: Core Extraction & Download Engine** - Go backend wrapper over yt-dlp & ffmpeg with multi-platform URL inspection and quality remuxing
+- [x] **Phase 1: Core Extraction - [ ] **Phase 1: Core Extraction & Download Engine** Download Engine** - Go backend wrapper over yt-dlp & ffmpeg with multi-platform URL inspection and quality remuxing
 - [ ] **Phase 2: Queue & Concurrency Management** - Worker pool, job states, live progress streaming, pause/resume, and file system integration
 - [ ] **Phase 3: Wails Desktop Application & UX** - Native desktop window, modern dark-mode frontend, clipboard auto-detection, and engine self-updater
 
@@ -23,8 +23,8 @@ Omnidrop Downloader is built in 3 coarse phases from the ground up: starting wit
 **Plans**: 2 plans
 
 Plans:
-- [ ] 01-01: Engine foundation: yt-dlp/ffmpeg detection, URL validator, and JSON metadata extractor
-- [ ] 01-02: Media downloader: format selection builder, execution process runner, and output file management
+- [x] 01-01: Engine foundation: yt-dlp/ffmpeg detection, URL validator, and JSON metadata extractor
+- [x] 01-02: Media downloader: format selection builder, execution process runner, and output file management
 
 ### Phase 2: Queue & Concurrency Management
 **Goal**: Create a robust multi-task download manager with live speed/ETA tracking, cancellation, and concurrency limits.
@@ -63,7 +63,7 @@ Phases execute in numeric order: 1 → 2 → 3
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Core Extraction & Download Engine | 0/2 | Not started | - |
+| 1. Core Extraction | 1. Core Extraction & Download Engine | 0/2 | Not started | - | Download Engine | 2/2 | Complete | 2026-09-09 |
 | 2. Queue & Concurrency Management | 0/2 | Not started | - |
 | 3. Wails Desktop Application & UX | 0/2 | Not started | - |
 

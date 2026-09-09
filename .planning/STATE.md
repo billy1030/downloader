@@ -3,10 +3,10 @@ gsd_state_version: '1.0'
 status: planning
 progress:
   total_phases: 3
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 6
-  completed_plans: 0
-  percent: 0
+  completed_plans: 2
+  percent: 33
 ---
 
 # Project State
@@ -15,43 +15,42 @@ progress:
 
 See: .planning/PROJECT.md (updated 2026-09-09)
 
-**Core value:** Reliable, one-click video and audio downloads across TikTok, Instagram, Facebook, X, and YouTube with crisp quality selection and a real-time progress manager.
-**Current focus:** Phase 1: Core Extraction & Download Engine
+**Core value:** Reliable, one-click video and audio downloads across TikTok, Douyin, Instagram, Facebook, X, and YouTube with crisp quality selection and a real-time progress manager.
+**Current focus:** Phase 2: Queue & Concurrency Management
 
 ## Current Position
 
-Phase: 1 of 3 (Core Extraction & Download Engine)
+Phase: 2 of 3 (Queue & Concurrency Management)
 Plan: 0 of 2 in current phase
-Status: Ready to execute
-Last activity: 2026-09-09 — Phase 1 planned (01-01 and 01-02 ready)
+Status: Ready to plan
+Last activity: 2026-09-09 — Phase 1 completed (Engine foundation, URL parsing, format muxing, CLI verification).
 
-Progress: [░░░░░░░░░░] 0%
+Progress: [███░░░░░░░] 33%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 0
-- Average duration: - min
-- Total execution time: 0.0 hours
+- Total plans completed: 2
+- Average duration: ~3 min
+- Total execution time: 0.1 hours
 
 ## Accumulated Context
 
 ### Decisions
 
-- Go backend chosen for concurrency and native binary efficiency.
-- Wails v2 chosen for modern desktop UI with small footprint.
-- yt-dlp + ffmpeg hybrid approach chosen for cross-platform scraper reliability.
+- Go backend with native `syscall.Setpgid` process group isolation cleanly terminates child processes.
+- yt-dlp `--progress-template` with pipe delimiter provides robust line-based progress streaming.
 
 ### Pending Todos
 
-None yet.
+None.
 
 ### Blockers/Concerns
 
-None. Local environment has Go (`go 1.22+`), `yt-dlp`, and `ffmpeg` available.
+None. Phase 1 passed all unit and live smoke tests.
 
 ## Session Continuity
 
-Last session: 2026-09-09 20:26
-Stopped at: Project initialization complete
+Last session: 2026-09-09 20:29
+Stopped at: Phase 1 completed successfully
 Resume file: None
