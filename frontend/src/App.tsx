@@ -140,8 +140,11 @@ export default function App() {
   return (
     <div className={`flex flex-col h-screen ${t.bg} ${t.textPrimary} transition-colors duration-200`}>
       {/* Top Navbar */}
-      <header className={`h-16 border-b ${t.headerBorder} ${t.headerBg} backdrop-blur-md px-6 flex items-center justify-between z-10 shrink-0`}>
-        <div className="flex items-center gap-3">
+      <header 
+        style={{ '--wails-draggable': 'drag' } as any}
+        className={`h-16 border-b ${t.headerBorder} ${t.headerBg} backdrop-blur-md pl-20 pr-6 flex items-center justify-between z-10 shrink-0 select-none`}
+      >
+        <div style={{ '--wails-draggable': 'no-drag' } as any} className="flex items-center gap-3">
           <div className={`w-10 h-10 rounded-xl flex items-center justify-center shadow-lg transition-colors ${
             currentTheme === 'warm'
               ? 'bg-gradient-to-tr from-amber-600 to-amber-500 shadow-amber-500/25'
@@ -160,7 +163,7 @@ export default function App() {
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div style={{ '--wails-draggable': 'no-drag' } as any} className="flex items-center gap-3">
           {/* Theme Quick Switcher */}
           <div className={`flex items-center p-1 rounded-xl border ${t.cardBorder} ${t.bgSubtle}`}>
             <button
