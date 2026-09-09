@@ -22,8 +22,8 @@ See: .planning/PROJECT.md (updated 2026-09-09)
 
 Phase: 1 of 3 (Core Extraction & Download Engine)
 Plan: 0 of 2 in current phase
-Status: Ready to plan
-Last activity: 2026-09-09 — Project initialized with research, requirements, and roadmap.
+Status: Ready to execute
+Last activity: 2026-09-09 — Phase 1 planned (01-01 and 01-02 ready)
 
 Progress: [░░░░░░░░░░] 0%
 
