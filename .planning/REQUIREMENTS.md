@@ -24,10 +24,10 @@ Requirements for initial release, sliced into coarse delivery phases.
 
 ### Queue & Download Management (QMAN)
 
-- [ ] **QMAN-01**: User can queue multiple downloads with configurable concurrency limit.
-- [ ] **QMAN-02**: User sees real-time progress for each active download (progress bar, speed in MB/s, ETA, downloaded/total size).
-- [ ] **QMAN-03**: User can pause, resume, cancel, and remove downloads from the queue.
-- [ ] **QMAN-04**: User can click to open the completed file or reveal it in the operating system file manager (Finder / Explorer).
+- [x] **QMAN-01**: User can queue multiple downloads with configurable concurrency limit.
+- [x] **QMAN-02**: User sees real-time progress for each active download (progress bar, speed in MB/s, ETA, downloaded/total size).
+- [x] **QMAN-03**: User can pause, resume, cancel, and remove downloads from the queue.
+- [x] **QMAN-04**: User can click to open the completed file or reveal it in the operating system file manager (Finder / Explorer).
 
 ### Desktop UI & Automation (DESK)
 
@@ -68,10 +68,10 @@ Deferred to future release.
 | FMT-01 | Phase 1 | Complete |
 | FMT-02 | Phase 1 | Complete |
 | FMT-03 | Phase 1 | Complete |
-| QMAN-01 | Phase 2 | Pending |
-| QMAN-02 | Phase 2 | Pending |
-| QMAN-03 | Phase 2 | Pending |
-| QMAN-04 | Phase 2 | Pending |
+| QMAN-01 | Phase 2 | Complete |
+| QMAN-02 | Phase 2 | Complete |
+| QMAN-03 | Phase 2 | Complete |
+| QMAN-04 | Phase 2 | Complete |
 | DESK-01 | Phase 3 | Pending |
 | DESK-02 | Phase 3 | Pending |
 | DESK-03 | Phase 3 | Pending |

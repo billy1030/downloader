@@ -7,7 +7,7 @@ Omnidrop Downloader is built in 3 coarse phases from the ground up: starting wit
 ## Phases
 
 - [x] **Phase 1: Core Extraction - [ ] **Phase 1: Core Extraction & Download Engine** Download Engine** - Go backend wrapper over yt-dlp & ffmpeg with multi-platform URL inspection and quality remuxing
-- [ ] **Phase 2: Queue & Concurrency Management** - Worker pool, job states, live progress streaming, pause/resume, and file system integration
+- [x] **Phase 2: Queue - [ ] **Phase 2: Queue & Concurrency Management** Concurrency Management** - Worker pool, job states, live progress streaming, pause/resume, and file system integration
 - [ ] **Phase 3: Wails Desktop Application & UX** - Native desktop window, modern dark-mode frontend, clipboard auto-detection, and engine self-updater
 
 ## Phase Details
@@ -38,8 +38,8 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 02-01: Concurrency queue worker pool, job state machine, and process context cancellation
-- [ ] 02-02: Real-time progress parser, status event broadcasting, and OS file reveal handlers
+- [x] 02-01: Concurrency queue worker pool, job state machine, and process context cancellation
+- [x] 02-02: Real-time progress parser, status event broadcasting, and OS file reveal handlers
 
 ### Phase 3: Wails Desktop Application & UX
 **Goal**: Package the entire system into a standalone desktop application with a modern dark-mode GUI, clipboard auto-detection, and engine updater.
@@ -64,7 +64,7 @@ Phases execute in numeric order: 1 → 2 → 3
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Core Extraction | 1. Core Extraction & Download Engine | 0/2 | Not started | - | Download Engine | 2/2 | Complete | 2026-09-09 |
-| 2. Queue & Concurrency Management | 0/2 | Not started | - |
+| 2. Queue | 2. Queue & Concurrency Management | 0/2 | Not started | - | Concurrency Management | 2/2 | Complete | 2026-09-09 |
 | 3. Wails Desktop Application & UX | 0/2 | Not started | - |
 
 ---
