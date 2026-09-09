@@ -1,9 +1,12 @@
-# Binaries
+# Binaries & Builds
 bin/
+build/bin/
 *.exe
 *.dll
 *.so
 *.dylib
+*.zip
+*.md5
 
 # Downloads & Temp
 downloads/
