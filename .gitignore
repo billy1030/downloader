@@ -1,0 +1,15 @@
+# Binaries
+bin/
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Downloads & Temp
+downloads/
+*.tmp
+*.part
+*.ytdl
+
+# OS
+.DS_Store
