@@ -15,9 +15,9 @@ Omnidrop Downloader is built in 3 coarse phases from the ground up: starting wit
 ### Phase 1: Core Extraction & Download Engine
 **Goal**: Build a rock-solid Go engine that validates URLs, inspects video/audio streams via yt-dlp JSON dumping, and executes downloads with ffmpeg remuxing.
 **Depends on**: Nothing (first phase)
-**Requirements**: PLAT-01, PLAT-02, PLAT-03, PLAT-04, PLAT-05, FMT-01, FMT-02, FMT-03
+**Requirements**: PLAT-01, PLAT-02, PLAT-03, PLAT-04, PLAT-05, PLAT-06, FMT-01, FMT-02, FMT-03
 **Success Criteria** (what must be TRUE):
-  1. Engine correctly parses URLs and extracts titles, thumbnails, and format lists for YouTube, TikTok, Instagram, X, and Facebook.
+  1. Engine correctly parses URLs and extracts titles, thumbnails, and format lists for YouTube, TikTok, Douyin, Instagram, X, and Facebook.
   2. Engine downloads high-resolution video (1080p/4K) and automatically merges separate audio streams with ffmpeg.
   3. Engine supports audio-only extraction (MP3/M4A) with clean metadata tagging.
 **Plans**: 2 plans
