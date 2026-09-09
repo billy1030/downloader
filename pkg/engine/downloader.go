@@ -9,7 +9,6 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
-	"syscall"
 
 	"omnidrop/pkg/models"
 )
@@ -70,8 +69,7 @@ func Download(ctx context.Context, env *Environment, opts models.DownloadOptions
 	args = append(args, cleanURL)
 
 	cmd := exec.CommandContext(ctx, env.YtDlpPath, args...)
-	// Process group isolation for clean cancellation
-	cmd.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
+	prepareCmdPlatform(cmd)
 
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
@@ -94,7 +92,7 @@ func Download(ctx context.Context, env *Environment, opts models.DownloadOptions
 		select {
 		case <-ctx.Done():
 			if cmd.Process != nil && cmd.Process.Pid > 0 {
-				_ = syscall.Kill(-cmd.Process.Pid, syscall.SIGKILL)
+				killProcessGroup(cmd.Process.Pid)
 			}
 		case <-done:
 		}
