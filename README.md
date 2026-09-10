@@ -148,8 +148,8 @@ Use an open-source, local-only Chrome / Firefox / Edge extension such as:
 ### Dependencies
 - **Go**: `1.22+`
 - **Node.js**: `v18+` (for JavaScript challenge solving)
-- **FFmpeg**: Available in system `PATH`
-- **yt-dlp**: Available in system `PATH`
+- **FFmpeg**: Detected via system `PATH` or standard Winget/Scoop/Chocolatey directories.
+- **yt-dlp**: Detected via system `PATH`, `%LOCALAPPDATA%\Microsoft\WindowsApps`, `%LOCALAPPDATA%\Microsoft\WinGet\Packages`, or Scoop/Chocolatey directories.
 
 ### Building on macOS
 
