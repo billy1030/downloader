@@ -25,6 +25,7 @@ func GetEngineVersion(env *Environment) string {
 	defer cancel()
 
 	cmd := exec.CommandContext(ctx, env.YtDlpPath, "--version")
+	prepareCmdPlatform(cmd)
 	out, err := cmd.Output()
 	if err != nil {
 		return "unknown"
@@ -45,6 +46,7 @@ func UpdateEngine(env *Environment) UpdateResult {
 	defer cancel()
 
 	cmd := exec.CommandContext(ctx, env.YtDlpPath, "-U")
+	prepareCmdPlatform(cmd)
 	var stdout, stderr bytes.Buffer
 	cmd.Stdout = &stdout
 	cmd.Stderr = &stderr

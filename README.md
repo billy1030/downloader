@@ -82,7 +82,7 @@ Then double-click `Omnidrop.app` to launch normally anytime.
 - **Beautiful Modern UI**:
   - 3 Crafted Themes: **Day** (Default), **Night**, and **Warm**.
   - Adaptive safe-area padding for macOS traffic lights (🔴 🟡 🟢) and Windows borderless titlebars.
-  - Background clipboard auto-detection banner.
+  - Clean silent subprocess execution on Windows without pop-up command prompt flickers.
 
 ---
 

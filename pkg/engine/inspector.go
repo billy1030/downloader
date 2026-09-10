@@ -67,6 +67,7 @@ func InspectURL(ctx context.Context, env *Environment, rawURL string, cookies st
 	args = append(args, cleanURL)
 
 	cmd := exec.CommandContext(ctx, env.YtDlpPath, args...)
+	prepareCmdPlatform(cmd)
 	var stdout, stderr bytes.Buffer
 	cmd.Stdout = &stdout
 	cmd.Stderr = &stderr
