@@ -30,6 +30,10 @@ func DetectBinaries() (*Environment, error) {
 			filepath.Join(home, "scoop", "shims", "yt-dlp.exe"),
 			`C:\ProgramData\chocolatey\bin\yt-dlp.exe`,
 		}
+		wingetBase := filepath.Join(home, "AppData", "Local", "Microsoft", "WinGet", "Packages")
+		if entries, err := filepath.Glob(filepath.Join(wingetBase, "*yt-dlp*", "yt-dlp.exe")); err == nil && len(entries) > 0 {
+			candidates = append([]string{entries[0]}, candidates...)
+		}
 		for _, c := range candidates {
 			if _, err := os.Stat(c); err == nil {
 				env.YtDlpPath = c
