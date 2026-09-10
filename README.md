@@ -68,6 +68,22 @@ Then double-click `Omnidrop.app` to launch normally anytime.
 
 ---
 
+## 🪟 Windows Installation Guide
+
+Omnidrop uses `yt-dlp` and `FFmpeg` for media processing. If you have not installed them yet:
+
+### Step 1: Install Engine Dependencies (via winget)
+Open **PowerShell** and run:
+```powershell
+winget install yt-dlp.yt-dlp Gyan.FFmpeg
+```
+
+### Step 2: Download & Run
+1. Download [**Omnidrop-windows-amd64.exe**](https://github.com/billy1030/downloader/releases/latest/download/Omnidrop-windows-amd64.exe) from the latest release.
+2. Double-click `Omnidrop-windows-amd64.exe` to launch.
+
+---
+
 ## 🌟 Key Features
 
 - **Cross-Platform**: Full native support for **macOS** (Apple Silicon & Intel) and **Windows** (64-bit).

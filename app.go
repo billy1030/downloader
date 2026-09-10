@@ -56,9 +56,7 @@ func NewApp() *App {
 // startup is called when the app starts
 func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
-	if a.configStore.Get().ClipboardAutoDetect {
-		a.clipWatcher.Start()
-	}
+	runtime.WindowShow(ctx)
 }
 
 // shutdown is called at termination
