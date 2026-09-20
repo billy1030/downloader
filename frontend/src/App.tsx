@@ -134,11 +134,22 @@ export default function App() {
 
   const handlePaste = async () => {
     try {
-      const text = await navigator.clipboard.readText();
-      setUrlInput(text);
-      handleInspect(text);
-    } catch (e) {
-      // Browser permissions fallback
+      const text = await bridge.pasteFromClipboard();
+      if (!text?.trim()) return;
+      setUrlInput(text.trim());
+      handleInspect(text.trim());
+    } catch (e: any) {
+      alert(`Could not read clipboard: ${e?.message || e}`);
+    }
+  };
+
+  const handlePlay = async () => {
+    if (!inspectModal) return;
+    try {
+      await bridge.playURL(inspectModal.url);
+      setInspectModal(null);
+    } catch (err: any) {
+      alert(`Could not open player: ${err?.message || err}\n\nInstall mpv, IINA, or VLC to use this feature.`);
     }
   };
 
@@ -528,6 +539,15 @@ export default function App() {
               >
                 Cancel
               </button>
+              {env?.has_player && (
+                <button
+                  onClick={handlePlay}
+                  className={`px-4 py-2.5 rounded-xl border ${t.cardBorder} hover:${t.bgSubtle} ${t.textSecondary} text-sm font-semibold transition flex items-center gap-2`}
+                  title="Stream in media player without downloading"
+                >
+                  <Play className="w-4 h-4" /> Play
+                </button>
+              )}
               <button
                 onClick={handleStartDownload}
                 className={`px-5 py-2.5 rounded-xl ${t.brandBtn} text-sm font-semibold shadow-lg transition flex items-center gap-2`}

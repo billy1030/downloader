@@ -41,6 +41,11 @@ func Download(ctx context.Context, env *Environment, opts models.DownloadOptions
 		"--progress-template", progressTemplate,
 		"--print", "after_move:FINAL_PATH:%(filepath)s",
 		"-o", outputTemplate,
+		"--ignore-errors", // skip items in a carousel that have no video (images)
+	}
+
+	if env.FFmpegPath != "" {
+		args = append(args, "--ffmpeg-location", env.FFmpegPath)
 	}
 
 	if env.NodePath != "" {

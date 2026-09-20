@@ -19,6 +19,8 @@ export function InspectURL(arg1:string):Promise<models.MediaInfo>;
 
 export function OpenFile(arg1:string):Promise<void>;
 
+export function PlayURL(arg1:string):Promise<void>;
+
 export function RemoveTask(arg1:string):Promise<void>;
 
 export function RevealFile(arg1:string):Promise<void>;

@@ -14,6 +14,7 @@ export const bridge = {
         version: '2025.01.26',
         has_ytdlp: true,
         has_ffmpeg: true,
+        has_player: false,
       };
     }
   },
@@ -88,6 +89,19 @@ export const bridge = {
       return WailsRuntime.EventsOn('queue:event', callback);
     } catch {
       return () => {};
+    }
+  },
+
+  playURL: async (url: string): Promise<void> => {
+    await AppBindings.PlayURL(url);
+  },
+
+  pasteFromClipboard: async (): Promise<string> => {
+    try {
+      return await WailsRuntime.ClipboardGetText();
+    } catch {
+      // Fallback to browser clipboard API
+      return navigator.clipboard.readText();
     }
   },
 };

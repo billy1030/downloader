@@ -58,12 +58,15 @@ func (a *App) shutdown(ctx context.Context) {
 // GetEnvironment returns detected binary paths and versions
 func (a *App) GetEnvironment() map[string]interface{} {
 	version := engine.GetEngineVersion(a.env)
+	player := engine.DetectPlayer()
+	hasPlayer := player != ""
 	return map[string]interface{}{
 		"yt_dlp_path": a.env.YtDlpPath,
 		"ffmpeg_path": a.env.FFmpegPath,
 		"version":     version,
 		"has_ytdlp":   a.env.YtDlpPath != "",
 		"has_ffmpeg":  a.env.FFmpegPath != "",
+		"has_player":  hasPlayer,
 	}
 }
 
@@ -151,4 +154,9 @@ func (a *App) SelectCookieFile() (string, error) {
 // UpdateEngine executes yt-dlp -U
 func (a *App) UpdateEngine() engine.UpdateResult {
 	return engine.UpdateEngine(a.env)
+}
+
+// PlayURL opens the URL in the best available local media player
+func (a *App) PlayURL(url string) error {
+	return engine.PlayURL(a.env, url)
 }

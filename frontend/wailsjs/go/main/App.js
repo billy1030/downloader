@@ -30,6 +30,10 @@ export function OpenFile(arg1) {
   return window['go']['main']['App']['OpenFile'](arg1);
 }
 
+export function PlayURL(arg1) {
+  return window['go']['main']['App']['PlayURL'](arg1);
+}
+
 export function RemoveTask(arg1) {
   return window['go']['main']['App']['RemoveTask'](arg1);
 }

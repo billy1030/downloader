@@ -78,4 +78,5 @@ export interface EnvironmentInfo {
   version: string;
   has_ytdlp: boolean;
   has_ffmpeg: boolean;
+  has_player: boolean;
 }

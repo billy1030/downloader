@@ -73,11 +73,17 @@ func InspectURL(ctx context.Context, env *Environment, rawURL string, cookies st
 	cmd.Stderr = &stderr
 
 	if err := cmd.Run(); err != nil {
-		errOutput := strings.TrimSpace(stderr.String())
-		if errOutput != "" {
-			return nil, fmt.Errorf("failed inspecting URL: %s", errOutput)
+		// For carousel posts (e.g. Instagram), yt-dlp may exit non-zero if some items
+		// are images (no video formats), but still write valid JSON for video items.
+		// Only treat as a hard error when stdout is completely empty.
+		if stdout.Len() == 0 {
+			errOutput := strings.TrimSpace(stderr.String())
+			if errOutput != "" {
+				return nil, fmt.Errorf("failed inspecting URL: %s", errOutput)
+			}
+			return nil, fmt.Errorf("failed inspecting URL: %w", err)
 		}
-		return nil, fmt.Errorf("failed inspecting URL: %w", err)
+		// else: fall through and try to parse whatever stdout we got
 	}
 
 	var raw ytDlpMediaRaw
