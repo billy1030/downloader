@@ -168,16 +168,21 @@ export default function App() {
   };
 
   const handlePlatformTest = async (sample: typeof PLATFORM_SAMPLES[0]) => {
-    setUrlInput(sample.url);
     setTestStatuses(prev => ({ ...prev, [sample.id]: 'loading' }));
     try {
-      const info = await bridge.inspectURL(sample.url);
+      await bridge.inspectURL(sample.url);
       setTestStatuses(prev => ({ ...prev, [sample.id]: 'pass' }));
-      setInspectModal(info);
-      setSelectedFormat(info.best_quality || 'best');
     } catch {
       setTestStatuses(prev => ({ ...prev, [sample.id]: 'fail' }));
     }
+  };
+
+  const handleTestAll = () => {
+    // Reset all to loading then fire in parallel
+    const init: Record<string, TestStatus> = {};
+    PLATFORM_SAMPLES.forEach(s => { init[s.id] = 'loading'; });
+    setTestStatuses(init);
+    PLATFORM_SAMPLES.forEach(s => handlePlatformTest(s));
   };
 
   const handleUpdateEngine = async () => {
@@ -345,43 +350,53 @@ export default function App() {
             {/* ── Quick Test Panel ── */}
             {showTests && (
               <div className={`mt-3 p-4 rounded-xl border ${t.cardBorder} ${t.bgSubtle} space-y-3`}>
-                <div className="flex items-center gap-2">
-                  <FlaskConical className={`w-4 h-4 ${t.accent}`} />
-                  <span className={`text-xs font-bold ${t.textPrimary}`}>Platform Connectivity Tests</span>
-                  <span className={`text-[11px] ${t.textSecondary}`}>— click any platform to run an inspect test</span>
+                <div className="flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-2">
+                    <FlaskConical className={`w-4 h-4 ${t.accent}`} />
+                    <span className={`text-xs font-bold ${t.textPrimary}`}>Platform Connectivity Tests</span>
+                  </div>
+                  <button
+                    onClick={handleTestAll}
+                    disabled={Object.values(testStatuses).some(s => s === 'loading')}
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg ${t.brandBtn} text-[11px] font-semibold transition disabled:opacity-50 disabled:cursor-wait shrink-0`}
+                  >
+                    {Object.values(testStatuses).some(s => s === 'loading')
+                      ? <><RefreshCw className="w-3 h-3 animate-spin" /> Testing…</>
+                      : <><FlaskConical className="w-3 h-3" /> Test All</>}
+                  </button>
                 </div>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                   {PLATFORM_SAMPLES.map(sample => {
                     const status = testStatuses[sample.id] ?? 'idle';
                     return (
-                      <button
+                      <div
                         key={sample.id}
-                        onClick={() => handlePlatformTest(sample)}
-                        disabled={status === 'loading'}
-                        className={`flex items-center justify-between gap-2 px-3 py-2.5 rounded-xl border text-xs font-semibold transition ${
+                        className={`flex items-center justify-between gap-2 px-3 py-2.5 rounded-xl border text-xs font-semibold ${
                           status === 'pass'
                             ? 'border-emerald-400 bg-emerald-500/10 text-emerald-600'
                             : status === 'fail'
                             ? 'border-rose-400 bg-rose-500/10 text-rose-600'
-                            : `${t.cardBorder} ${t.card} ${t.textSecondary} hover:${t.textPrimary}`
-                        } disabled:opacity-60 disabled:cursor-wait`}
-                        title={sample.url}
+                            : status === 'loading'
+                            ? `${t.cardBorder} ${t.card} ${t.textMuted}`
+                            : `${t.cardBorder} ${t.card} ${t.textSecondary}`
+                        }`}
                       >
                         <span className="flex items-center gap-1.5">
                           <span>{sample.emoji}</span>
                           <span>{sample.label}</span>
                         </span>
                         <span className="ml-auto shrink-0">
+                          {status === 'idle'    && <span className={`text-[10px] ${t.textMuted}`}>—</span>}
                           {status === 'loading' && <RefreshCw className="w-3.5 h-3.5 animate-spin" />}
                           {status === 'pass'    && <CheckCircle2 className="w-3.5 h-3.5" />}
                           {status === 'fail'    && <AlertCircle className="w-3.5 h-3.5" />}
                         </span>
-                      </button>
+                      </div>
                     );
                   })}
                 </div>
                 <p className={`text-[11px] ${t.textSecondary}`}>
-                  A passing test means yt-dlp can inspect that platform. Failed = site blocked, cookie auth needed, or video removed.
+                  ✓ pass = yt-dlp can reach the platform &nbsp;·&nbsp; ✗ fail = blocked / needs cookies / video removed
                 </p>
               </div>
             )}
