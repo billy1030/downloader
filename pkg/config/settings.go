@@ -9,13 +9,12 @@ import (
 
 // AppSettings stores user preferences
 type AppSettings struct {
-	OutputDir           string `json:"output_dir"`
-	Concurrency         int    `json:"concurrency"`
-	Proxy               string `json:"proxy"`
-	ClipboardAutoDetect bool   `json:"clipboard_auto_detect"`
-	DefaultAudioFormat  string `json:"default_audio_format"`
-	Theme               string `json:"theme"`
-	CookieFile          string `json:"cookie_file"`
+	OutputDir          string `json:"output_dir"`
+	Concurrency        int    `json:"concurrency"`
+	Proxy              string `json:"proxy"`
+	DefaultAudioFormat string `json:"default_audio_format"`
+	Theme              string `json:"theme"`
+	CookieFile         string `json:"cookie_file"`
 }
 
 // Store handles persistence of settings
@@ -49,12 +48,11 @@ func NewStore() *Store {
 	store := &Store{
 		filePath: configFile,
 		settings: AppSettings{
-			OutputDir:           getDefaultOutputDir(),
-			Concurrency:         3,
-			Proxy:               "",
-			ClipboardAutoDetect: true,
-			DefaultAudioFormat:  "mp3",
-			Theme:               "day",
+			OutputDir:          getDefaultOutputDir(),
+			Concurrency:        3,
+			Proxy:              "",
+			DefaultAudioFormat: "mp3",
+			Theme:              "day",
 		},
 	}
 
@@ -74,7 +72,6 @@ func (s *Store) load() {
 				s.settings.Concurrency = loaded.Concurrency
 			}
 			s.settings.Proxy = loaded.Proxy
-			s.settings.ClipboardAutoDetect = loaded.ClipboardAutoDetect
 			if loaded.DefaultAudioFormat != "" {
 				s.settings.DefaultAudioFormat = loaded.DefaultAudioFormat
 			}

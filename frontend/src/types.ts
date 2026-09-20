@@ -67,7 +67,6 @@ export interface AppSettings {
   output_dir: string;
   concurrency: number;
   proxy: string;
-  clipboard_auto_detect: boolean;
   default_audio_format: string;
   theme: string;
   cookie_file?: string;

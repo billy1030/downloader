@@ -4,7 +4,6 @@ export namespace config {
 	    output_dir: string;
 	    concurrency: number;
 	    proxy: string;
-	    clipboard_auto_detect: boolean;
 	    default_audio_format: string;
 	    theme: string;
 	    cookie_file: string;
@@ -18,7 +17,6 @@ export namespace config {
 	        this.output_dir = source["output_dir"];
 	        this.concurrency = source["concurrency"];
 	        this.proxy = source["proxy"];
-	        this.clipboard_auto_detect = source["clipboard_auto_detect"];
 	        this.default_audio_format = source["default_audio_format"];
 	        this.theme = source["theme"];
 	        this.cookie_file = source["cookie_file"];

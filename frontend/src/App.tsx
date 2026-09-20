@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { 
   Download, Settings, Folder, RefreshCw, X, Play, Trash2, CheckCircle2, 
-  AlertCircle, ArrowDownToLine, Copy, Film, Music, ShieldCheck, Sparkles,
+  AlertCircle, ArrowDownToLine, Copy, Film, Music, ShieldCheck,
   Sun, Moon, Flame
 } from 'lucide-react';
 import { bridge } from './wailsBridge';
@@ -22,7 +22,6 @@ export default function App() {
   const [currentTheme, setCurrentTheme] = useState<ThemeMode>('day');
   const [showSettings, setShowSettings] = useState(false);
   const [env, setEnv] = useState<EnvironmentInfo | null>(null);
-  const [clipboardUrl, setClipboardUrl] = useState<string | null>(null);
   const [updatingEngine, setUpdatingEngine] = useState(false);
   const [updateStatus, setUpdateStatus] = useState<string | null>(null);
 
@@ -80,14 +79,8 @@ export default function App() {
       });
     });
 
-    // Listen to clipboard auto-detect
-    const unbindClip = bridge.onClipboardDetected((url: string) => {
-      setClipboardUrl(url);
-    });
-
     return () => {
       unbindQueue();
-      unbindClip();
     };
   }, []);
 
@@ -108,7 +101,6 @@ export default function App() {
       const info = await bridge.inspectURL(cleanUrl);
       setInspectModal(info);
       setSelectedFormat(info.best_quality || 'best');
-      setClipboardUrl(null);
     } catch (err: any) {
       alert(`Could not inspect URL: ${err?.message || err}`);
     } finally {
@@ -244,30 +236,6 @@ export default function App() {
         </div>
       </header>
 
-      {/* Clipboard Toast Banner */}
-      {clipboardUrl && (
-        <div className={`border-b ${t.cardBorder} ${t.bgSubtle} px-6 py-3 flex items-center justify-between text-sm animate-in slide-in-from-top duration-200 shrink-0`}>
-          <div className="flex items-center gap-3 truncate">
-            <Sparkles className={`w-4 h-4 ${t.accent} shrink-0`} />
-            <span className={`font-medium ${t.textPrimary}`}>Link detected in clipboard:</span>
-            <span className={`truncate max-w-md font-mono text-xs ${t.accent}`}>{clipboardUrl}</span>
-          </div>
-          <div className="flex items-center gap-2 shrink-0">
-            <button
-              onClick={() => handleInspect(clipboardUrl)}
-              className={`px-3 py-1 ${t.brandBtn} text-xs font-semibold rounded-lg shadow-sm transition`}
-            >
-              Inspect & Download
-            </button>
-            <button
-              onClick={() => setClipboardUrl(null)}
-              className={`p-1 ${t.textMuted} hover:${t.textPrimary}`}
-            >
-              <X className="w-4 h-4" />
-            </button>
-          </div>
-        </div>
-      )}
 
       {/* Main Content Area */}
       <main className="flex-1 overflow-y-auto p-6 space-y-6 max-w-5xl mx-auto w-full">
@@ -670,24 +638,6 @@ export default function App() {
                     bridge.saveSettings(updated);
                   }}
                   className={`w-full ${currentTheme === 'warm' ? 'accent-amber-600' : 'accent-indigo-600'}`}
-                />
-              </div>
-
-              {/* Clipboard auto detect toggle */}
-              <div className={`flex items-center justify-between p-3 rounded-xl ${t.bgSubtle} border ${t.cardBorder}`}>
-                <div>
-                  <h4 className={`text-xs font-semibold ${t.textPrimary}`}>Auto-Detect Clipboard URLs</h4>
-                  <p className={`text-[11px] ${t.textMuted} mt-0.5`}>Prompt when copying media links</p>
-                </div>
-                <input
-                  type="checkbox"
-                  checked={settings.clipboard_auto_detect}
-                  onChange={e => {
-                    const updated = { ...settings, clipboard_auto_detect: e.target.checked };
-                    setSettings(updated);
-                    bridge.saveSettings(updated);
-                  }}
-                  className={`w-4 h-4 ${currentTheme === 'warm' ? 'accent-amber-600' : 'accent-indigo-600'} rounded`}
                 />
               </div>
 

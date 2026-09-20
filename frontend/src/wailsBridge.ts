@@ -61,7 +61,6 @@ export const bridge = {
         output_dir: '~/Downloads/Omnidrop',
         concurrency: 3,
         proxy: '',
-        clipboard_auto_detect: true,
         default_audio_format: 'mp3',
         theme: 'day',
       };
@@ -87,14 +86,6 @@ export const bridge = {
   onQueueEvent: (callback: (evt: any) => void) => {
     try {
       return WailsRuntime.EventsOn('queue:event', callback);
-    } catch {
-      return () => {};
-    }
-  },
-
-  onClipboardDetected: (callback: (url: string) => void) => {
-    try {
-      return WailsRuntime.EventsOn('clipboard:detected', callback);
     } catch {
       return () => {};
     }

@@ -6,7 +6,6 @@ import (
 
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 
-	"omnidrop/pkg/clipboard"
 	"omnidrop/pkg/config"
 	"omnidrop/pkg/engine"
 	"omnidrop/pkg/models"
@@ -15,11 +14,10 @@ import (
 
 // App struct manages desktop lifecycle and IPC
 type App struct {
-	ctx          context.Context
-	env          *engine.Environment
-	queueMgr     *queue.Manager
-	configStore  *config.Store
-	clipWatcher  *clipboard.Watcher
+	ctx         context.Context
+	env         *engine.Environment
+	queueMgr    *queue.Manager
+	configStore *config.Store
 }
 
 // NewApp creates a new App application struct
@@ -43,13 +41,6 @@ func NewApp() *App {
 		}
 	})
 
-	// Clipboard monitor
-	app.clipWatcher = clipboard.NewWatcher(func(detectedURL string) {
-		if app.ctx != nil && app.configStore.Get().ClipboardAutoDetect {
-			runtime.EventsEmit(app.ctx, "clipboard:detected", detectedURL)
-		}
-	})
-
 	return app
 }
 
@@ -61,7 +52,6 @@ func (a *App) startup(ctx context.Context) {
 
 // shutdown is called at termination
 func (a *App) shutdown(ctx context.Context) {
-	a.clipWatcher.Stop()
 	a.queueMgr.Close()
 }
 
@@ -137,11 +127,6 @@ func (a *App) SaveSettings(settings config.AppSettings) error {
 	err := a.configStore.Update(settings)
 	if err == nil {
 		a.queueMgr.SetConcurrency(settings.Concurrency)
-		if settings.ClipboardAutoDetect {
-			a.clipWatcher.Start()
-		} else {
-			a.clipWatcher.Stop()
-		}
 	}
 	return err
 }

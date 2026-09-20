@@ -1,0 +1,99 @@
+name: Build and Release Omnidrop
+
+on:
+  push:
+    tags:
+      - 'v*'
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build (${{ matrix.os }} - ${{ matrix.arch }})
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      matrix:
+        include:
+          # macOS Apple Silicon
+          - os: darwin
+            arch: arm64
+            runner: macos-latest
+            output_name: Omnidrop-darwin-arm64
+          # macOS Intel
+          - os: darwin
+            arch: amd64
+            runner: macos-13
+            output_name: Omnidrop-darwin-x86_64
+          # Windows x64
+          - os: windows
+            arch: amd64
+            runner: windows-latest
+            output_name: Omnidrop-windows-amd64.exe
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.23'
+          cache: true
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Wails CLI
+        run: go install github.com/wailsapp/wails/v2/cmd/wails@latest
+        shell: bash
+
+      - name: Install Frontend Dependencies & Build Frontend
+        run: |
+          cd frontend
+          npm install
+          npm run build
+        shell: bash
+
+      - name: Build macOS Binary
+        if: matrix.os == 'darwin'
+        run: |
+          CGO_LDFLAGS="-framework UniformTypeIdentifiers" go build -tags desktop,production -o bin/${{ matrix.output_name }} .
+        shell: bash
+
+      - name: Build Windows Binary
+        if: matrix.os == 'windows'
+        run: |
+          go build -tags desktop,production -ldflags "-H windowsgui" -o bin/${{ matrix.output_name }} .
+        shell: bash
+
+      - name: Upload Binary Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.output_name }}
+          path: bin/${{ matrix.output_name }}
+
+  release:
+    name: Create GitHub Release
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Prepare Release Assets
+        run: |
+          mkdir -p release-assets
+          find artifacts -type f -exec cp {} release-assets/ \;
+          ls -la release-assets
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: release-assets/*
+          generate_release_notes: true

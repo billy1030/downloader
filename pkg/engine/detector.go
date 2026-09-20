@@ -23,9 +23,25 @@ func DetectBinaries() (*Environment, error) {
 	if err == nil {
 		env.YtDlpPath = ytPath
 	} else {
-		// Common Windows fallbacks
 		home, _ := os.UserHomeDir()
 		candidates := []string{
+			// macOS: Homebrew
+			"/opt/homebrew/bin/yt-dlp",
+			"/usr/local/bin/yt-dlp",
+			// macOS: System Python framework (e.g. python.org installer)
+			"/Library/Frameworks/Python.framework/Versions/Current/bin/yt-dlp",
+			"/Library/Frameworks/Python.framework/Versions/3.13/bin/yt-dlp",
+			"/Library/Frameworks/Python.framework/Versions/3.12/bin/yt-dlp",
+			"/Library/Frameworks/Python.framework/Versions/3.11/bin/yt-dlp",
+			"/Library/Frameworks/Python.framework/Versions/3.10/bin/yt-dlp",
+			// macOS: User Python (pip install --user)
+			filepath.Join(home, "Library", "Python", "3.13", "bin", "yt-dlp"),
+			filepath.Join(home, "Library", "Python", "3.12", "bin", "yt-dlp"),
+			filepath.Join(home, "Library", "Python", "3.11", "bin", "yt-dlp"),
+			filepath.Join(home, "Library", "Python", "3.10", "bin", "yt-dlp"),
+			// macOS: pipx
+			filepath.Join(home, ".local", "bin", "yt-dlp"),
+			// Windows fallbacks
 			filepath.Join(home, "AppData", "Local", "Microsoft", "WindowsApps", "yt-dlp.exe"),
 			filepath.Join(home, "scoop", "shims", "yt-dlp.exe"),
 			`C:\ProgramData\chocolatey\bin\yt-dlp.exe`,
@@ -49,6 +65,10 @@ func DetectBinaries() (*Environment, error) {
 	} else {
 		home, _ := os.UserHomeDir()
 		candidates := []string{
+			// macOS: Homebrew
+			"/opt/homebrew/bin/ffmpeg",
+			"/usr/local/bin/ffmpeg",
+			// Windows fallbacks
 			filepath.Join(home, "scoop", "shims", "ffmpeg.exe"),
 			`C:\ProgramData\chocolatey\bin\ffmpeg.exe`,
 		}
@@ -65,12 +85,27 @@ func DetectBinaries() (*Environment, error) {
 		}
 	}
 
-	// Check node for JS challenge solving
+	// Check node for JS challenge solving (required by yt-dlp for YouTube)
 	nodePath, err := exec.LookPath("node")
 	if err == nil {
 		env.NodePath = nodePath
-	} else if _, err := exec.Command("/opt/homebrew/bin/node", "--version").Output(); err == nil {
-		env.NodePath = "/opt/homebrew/bin/node"
+	} else {
+		nodeCandidates := []string{
+			"/opt/homebrew/bin/node",
+			"/usr/local/bin/node",
+			"/usr/bin/node",
+		}
+		// Also scan nvm versions
+		home, _ := os.UserHomeDir()
+		if nvmEntries, _ := filepath.Glob(filepath.Join(home, ".nvm", "versions", "node", "*", "bin", "node")); len(nvmEntries) > 0 {
+			nodeCandidates = append(nodeCandidates, nvmEntries[len(nvmEntries)-1])
+		}
+		for _, c := range nodeCandidates {
+			if _, err := os.Stat(c); err == nil {
+				env.NodePath = c
+				break
+			}
+		}
 	}
 
 	if env.YtDlpPath == "" {
