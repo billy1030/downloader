@@ -58,8 +58,7 @@ func (a *App) shutdown(ctx context.Context) {
 // GetEnvironment returns detected binary paths and versions
 func (a *App) GetEnvironment() map[string]interface{} {
 	version := engine.GetEngineVersion(a.env)
-	player := engine.DetectPlayer()
-	hasPlayer := player != ""
+	hasPlayer := engine.HasPlayer(a.env)
 	return map[string]interface{}{
 		"yt_dlp_path": a.env.YtDlpPath,
 		"ffmpeg_path": a.env.FFmpegPath,
