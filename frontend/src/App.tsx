@@ -2,11 +2,23 @@ import React, { useState, useEffect } from 'react';
 import { 
   Download, Settings, Folder, RefreshCw, X, Play, Trash2, CheckCircle2, 
   AlertCircle, ArrowDownToLine, Copy, Film, Music, ShieldCheck,
-  Sun, Moon, Flame
+  Sun, Moon, Flame, FlaskConical, ChevronDown, ChevronUp
 } from 'lucide-react';
 import { bridge } from './wailsBridge';
 import { Task, MediaInfo, AppSettings, EnvironmentInfo } from './types';
 import { themes, ThemeMode } from './themes';
+
+// ── Platform sample URLs for quick connectivity tests ──────────────────────
+const PLATFORM_SAMPLES: { id: string; label: string; emoji: string; url: string }[] = [
+  { id: 'youtube',   label: 'YouTube',   emoji: '▶️',  url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' },
+  { id: 'tiktok',    label: 'TikTok',    emoji: '🎵',  url: 'https://www.tiktok.com/@zachking/video/6768504823336815877' },
+  { id: 'instagram', label: 'Instagram', emoji: '📸',  url: 'https://www.instagram.com/reel/C4pR3_mPzUl/' },
+  { id: 'twitter',   label: 'X/Twitter', emoji: '🐦',  url: 'https://x.com/twitter/status/1445066953054588929' },
+  { id: 'facebook',  label: 'Facebook',  emoji: '👍',  url: 'https://www.facebook.com/watch/?v=1195840074291348' },
+  { id: 'douyin',    label: 'Douyin',    emoji: '🎬',  url: 'https://v.douyin.com/iRNBho6U/' },
+];
+
+type TestStatus = 'idle' | 'loading' | 'pass' | 'fail';
 
 export default function App() {
   const [urlInput, setUrlInput] = useState('');
@@ -23,6 +35,8 @@ export default function App() {
   const [showSettings, setShowSettings] = useState(false);
   const [env, setEnv] = useState<EnvironmentInfo | null>(null);
   const [updatingEngine, setUpdatingEngine] = useState(false);
+  const [showTests, setShowTests] = useState(false);
+  const [testStatuses, setTestStatuses] = useState<Record<string, TestStatus>>({});
   const [updateStatus, setUpdateStatus] = useState<string | null>(null);
 
   useEffect(() => {
@@ -149,7 +163,20 @@ export default function App() {
       await bridge.playURL(inspectModal.url);
       setInspectModal(null);
     } catch (err: any) {
-      alert(`Could not open player: ${err?.message || err}\n\nInstall mpv, IINA, or VLC to use this feature.`);
+      alert(`Could not open player: ${err?.message || err}\n\nInstall ffplay (brew install ffmpeg) to use this feature.`);
+    }
+  };
+
+  const handlePlatformTest = async (sample: typeof PLATFORM_SAMPLES[0]) => {
+    setUrlInput(sample.url);
+    setTestStatuses(prev => ({ ...prev, [sample.id]: 'loading' }));
+    try {
+      const info = await bridge.inspectURL(sample.url);
+      setTestStatuses(prev => ({ ...prev, [sample.id]: 'pass' }));
+      setInspectModal(info);
+      setSelectedFormat(info.best_quality || 'best');
+    } catch {
+      setTestStatuses(prev => ({ ...prev, [sample.id]: 'fail' }));
     }
   };
 
@@ -294,16 +321,70 @@ export default function App() {
               </button>
             </div>
 
-            {/* Platform pills */}
-            <div className="flex flex-wrap items-center gap-2 pt-1 text-xs">
-              <span className={`font-medium ${t.textSecondary}`}>Supported:</span>
-              <span className={`px-2 py-0.5 rounded-md ${t.pillBg} border ${t.pillBorder} ${t.pillText}`}>YouTube</span>
-              <span className={`px-2 py-0.5 rounded-md ${t.pillBg} border ${t.pillBorder} ${t.pillText}`}>TikTok</span>
-              <span className={`px-2 py-0.5 rounded-md ${t.pillBg} border ${t.pillBorder} ${t.pillText}`}>抖音 Douyin</span>
-              <span className={`px-2 py-0.5 rounded-md ${t.pillBg} border ${t.pillBorder} ${t.pillText}`}>Instagram</span>
-              <span className={`px-2 py-0.5 rounded-md ${t.pillBg} border ${t.pillBorder} ${t.pillText}`}>X / Twitter</span>
-              <span className={`px-2 py-0.5 rounded-md ${t.pillBg} border ${t.pillBorder} ${t.pillText}`}>Facebook</span>
+            {/* Platform pills + Quick Test toggle */}
+            <div className="flex flex-wrap items-center justify-between gap-2 pt-1 text-xs">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className={`font-medium ${t.textSecondary}`}>Supported:</span>
+                <span className={`px-2 py-0.5 rounded-md ${t.pillBg} border ${t.pillBorder} ${t.pillText}`}>YouTube</span>
+                <span className={`px-2 py-0.5 rounded-md ${t.pillBg} border ${t.pillBorder} ${t.pillText}`}>TikTok</span>
+                <span className={`px-2 py-0.5 rounded-md ${t.pillBg} border ${t.pillBorder} ${t.pillText}`}>抖音 Douyin</span>
+                <span className={`px-2 py-0.5 rounded-md ${t.pillBg} border ${t.pillBorder} ${t.pillText}`}>Instagram</span>
+                <span className={`px-2 py-0.5 rounded-md ${t.pillBg} border ${t.pillBorder} ${t.pillText}`}>X / Twitter</span>
+                <span className={`px-2 py-0.5 rounded-md ${t.pillBg} border ${t.pillBorder} ${t.pillText}`}>Facebook</span>
+              </div>
+              <button
+                onClick={() => setShowTests(v => !v)}
+                className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg border ${t.cardBorder} ${t.bgSubtle} ${t.textSecondary} hover:${t.textPrimary} transition text-[11px] font-semibold shrink-0`}
+              >
+                <FlaskConical className="w-3.5 h-3.5" />
+                Quick Test
+                {showTests ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+              </button>
             </div>
+
+            {/* ── Quick Test Panel ── */}
+            {showTests && (
+              <div className={`mt-3 p-4 rounded-xl border ${t.cardBorder} ${t.bgSubtle} space-y-3`}>
+                <div className="flex items-center gap-2">
+                  <FlaskConical className={`w-4 h-4 ${t.accent}`} />
+                  <span className={`text-xs font-bold ${t.textPrimary}`}>Platform Connectivity Tests</span>
+                  <span className={`text-[11px] ${t.textSecondary}`}>— click any platform to run an inspect test</span>
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                  {PLATFORM_SAMPLES.map(sample => {
+                    const status = testStatuses[sample.id] ?? 'idle';
+                    return (
+                      <button
+                        key={sample.id}
+                        onClick={() => handlePlatformTest(sample)}
+                        disabled={status === 'loading'}
+                        className={`flex items-center justify-between gap-2 px-3 py-2.5 rounded-xl border text-xs font-semibold transition ${
+                          status === 'pass'
+                            ? 'border-emerald-400 bg-emerald-500/10 text-emerald-600'
+                            : status === 'fail'
+                            ? 'border-rose-400 bg-rose-500/10 text-rose-600'
+                            : `${t.cardBorder} ${t.card} ${t.textSecondary} hover:${t.textPrimary}`
+                        } disabled:opacity-60 disabled:cursor-wait`}
+                        title={sample.url}
+                      >
+                        <span className="flex items-center gap-1.5">
+                          <span>{sample.emoji}</span>
+                          <span>{sample.label}</span>
+                        </span>
+                        <span className="ml-auto shrink-0">
+                          {status === 'loading' && <RefreshCw className="w-3.5 h-3.5 animate-spin" />}
+                          {status === 'pass'    && <CheckCircle2 className="w-3.5 h-3.5" />}
+                          {status === 'fail'    && <AlertCircle className="w-3.5 h-3.5" />}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+                <p className={`text-[11px] ${t.textSecondary}`}>
+                  A passing test means yt-dlp can inspect that platform. Failed = site blocked, cookie auth needed, or video removed.
+                </p>
+              </div>
+            )}
           </div>
         </section>
 
