@@ -867,7 +867,7 @@ export default function App() {
                   <button
                     type="button"
                     onClick={async () => {
-                      // Attempt native desktop file picker first
+                      // 1. Try native desktop file dialog first
                       try {
                         const file = await bridge.selectCookieFile();
                         if (file) {
@@ -877,15 +877,16 @@ export default function App() {
                           return;
                         }
                       } catch (err) {
-                        console.warn('Native picker error, opening browser file dialog:', err);
+                        console.warn('Native picker error:', err);
                       }
-                      // Fallback: trigger HTML file input for browser / web mode
+                      // 2. Immediate fallback: open standard browser file explorer picker
                       cookieFileInputRef.current?.click();
                     }}
-                    className={`px-3 py-2 ${t.bgSubtle} hover:${t.card} active:scale-95 border ${t.cardBorder} rounded-xl text-xs font-semibold ${t.textSecondary} transition-all cursor-pointer`}
-                    title="Import Netscape cookies.txt file"
+                    className={`px-3 py-2 ${t.bgSubtle} hover:${t.card} active:scale-95 border ${t.cardBorder} rounded-xl text-xs font-semibold ${t.textSecondary} transition-all cursor-pointer flex items-center gap-1.5`}
+                    title="Open file explorer to select Netscape cookies.txt"
                   >
-                    Select .txt
+                    <Folder className="w-3.5 h-3.5 text-indigo-500" />
+                    <span>Browse .txt</span>
                   </button>
                 </div>
               </div>
