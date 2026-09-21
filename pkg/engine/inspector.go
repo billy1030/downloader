@@ -78,8 +78,18 @@ func InspectURL(ctx context.Context, env *Environment, rawURL string, cookies st
 		// Only treat as a hard error when stdout is completely empty.
 		if stdout.Len() == 0 {
 			errOutput := strings.TrimSpace(stderr.String())
+			var cleanMsg string
+			for _, line := range strings.Split(errOutput, "\n") {
+				line = strings.TrimSpace(line)
+				if strings.HasPrefix(line, "ERROR:") {
+					cleanMsg = strings.TrimSpace(strings.TrimPrefix(line, "ERROR:"))
+				}
+			}
+			if cleanMsg != "" {
+				return nil, fmt.Errorf("%s", cleanMsg)
+			}
 			if errOutput != "" {
-				return nil, fmt.Errorf("failed inspecting URL: %s", errOutput)
+				return nil, fmt.Errorf("%s", errOutput)
 			}
 			return nil, fmt.Errorf("failed inspecting URL: %w", err)
 		}

@@ -149,7 +149,22 @@ func Download(ctx context.Context, env *Environment, opts models.DownloadOptions
 		if ctx.Err() != nil {
 			return ctx.Err()
 		}
-		return fmt.Errorf("download error: %s (%w)", strings.TrimSpace(errBuf.String()), err)
+		rawErr := strings.TrimSpace(errBuf.String())
+		// Extract the most descriptive ERROR: line if available
+		var cleanMsg string
+		for _, line := range strings.Split(rawErr, "\n") {
+			line = strings.TrimSpace(line)
+			if strings.HasPrefix(line, "ERROR:") {
+				cleanMsg = strings.TrimSpace(strings.TrimPrefix(line, "ERROR:"))
+			}
+		}
+		if cleanMsg == "" {
+			cleanMsg = rawErr
+		}
+		if cleanMsg == "" {
+			cleanMsg = err.Error()
+		}
+		return fmt.Errorf("%s", cleanMsg)
 	}
 
 	if onProgress != nil {

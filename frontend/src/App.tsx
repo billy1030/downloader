@@ -487,10 +487,28 @@ export default function App() {
                         )}
                         {task.status === 'failed' && (
                           <span className="text-rose-600 font-medium flex items-center gap-1">
-                            <AlertCircle className="w-3.5 h-3.5" /> Failed
+                            <AlertCircle className="w-3.5 h-3.5 shrink-0" /> Failed
                           </span>
                         )}
                       </div>
+                      {task.status === 'failed' && task.error && (
+                        <div className="mt-2 text-xs text-rose-600/90 dark:text-rose-400/90 bg-rose-500/10 border border-rose-500/20 rounded-lg p-2 flex flex-col gap-1">
+                          <span className="font-mono text-[11px] break-all leading-tight">
+                            {task.error}
+                          </span>
+                          {(task.error.toLowerCase().includes('cookie') || task.error.toLowerCase().includes('403') || task.error.toLowerCase().includes('bot') || task.error.toLowerCase().includes('sign in')) && (
+                            <div className="flex items-center gap-1.5 text-[11px] font-medium text-rose-500 dark:text-rose-300 pt-0.5">
+                              <span>💡 Tip: Add your browser cookies in</span>
+                              <button 
+                                onClick={() => setShowSettings(true)}
+                                className="underline font-semibold hover:opacity-80 inline-flex items-center gap-0.5"
+                              >
+                                Settings
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                      )}
                       {/* Progress Bar */}
                       {task.status === 'downloading' && (
                         <div className={`w-full ${t.bgSubtle} rounded-full h-1.5 mt-2.5 overflow-hidden`}>
