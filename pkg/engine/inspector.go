@@ -85,6 +85,17 @@ func InspectURL(ctx context.Context, env *Environment, rawURL string, cookies st
 					cleanMsg = strings.TrimSpace(strings.TrimPrefix(line, "ERROR:"))
 				}
 			}
+
+			// If browser cookie database copy failed (e.g. Chrome is running or App-Bound encryption),
+			// retry inspecting without cookies as fallback:
+			if cookies != "" && strings.Contains(errOutput, "Could not copy") {
+				fallbackInfo, fallbackErr := InspectURL(ctx, env, rawURL, "")
+				if fallbackErr == nil && fallbackInfo != nil {
+					return fallbackInfo, nil
+				}
+				return nil, fmt.Errorf("Chrome is running and locked its cookie database. Please either select a Netscape cookies.txt file in Settings or close Chrome completely.")
+			}
+
 			if cleanMsg != "" {
 				return nil, fmt.Errorf("%s", cleanMsg)
 			}
