@@ -866,21 +866,21 @@ export default function App() {
                   />
                   <button
                     type="button"
-                    onClick={async () => {
-                      // 1. Try native desktop file dialog first
-                      try {
-                        const file = await bridge.selectCookieFile();
-                        if (file) {
-                          const updated = { ...settings, cookie_file: file };
-                          setSettings(updated);
-                          bridge.saveSettings(updated);
-                          return;
-                        }
-                      } catch (err) {
-                        console.warn('Native picker error:', err);
+                    onClick={() => {
+                      // Synchronous click on file input ensures browser popup blocker doesn't cancel it
+                      if (cookieFileInputRef.current) {
+                        cookieFileInputRef.current.click();
                       }
-                      // 2. Immediate fallback: open standard browser file explorer picker
-                      cookieFileInputRef.current?.click();
+                      // In native desktop app, also invoke native dialog
+                      if (typeof (window as any)?.go?.main?.App?.SelectCookieFile === 'function') {
+                        bridge.selectCookieFile().then((file) => {
+                          if (file) {
+                            const updated = { ...settings, cookie_file: file };
+                            setSettings(updated);
+                            bridge.saveSettings(updated);
+                          }
+                        }).catch(() => {});
+                      }
                     }}
                     className={`px-3 py-2 ${t.bgSubtle} hover:${t.card} active:scale-95 border ${t.cardBorder} rounded-xl text-xs font-semibold ${t.textSecondary} transition-all cursor-pointer flex items-center gap-1.5`}
                     title="Open file explorer to select Netscape cookies.txt"
