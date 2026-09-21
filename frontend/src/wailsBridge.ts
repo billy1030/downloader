@@ -77,7 +77,28 @@ export const bridge = {
   },
 
   selectCookieFile: async (): Promise<string> => {
-    return AppBindings.SelectCookieFile();
+    try {
+      if (typeof (AppBindings as any).SelectCookieFile === 'function') {
+        const path = await AppBindings.SelectCookieFile();
+        return path || '';
+      }
+      return '';
+    } catch (err) {
+      console.warn('Native SelectCookieFile failed or unavailable in browser mode:', err);
+      return '';
+    }
+  },
+
+  saveCookieContent: async (content: string): Promise<string> => {
+    try {
+      if (typeof (AppBindings as any).SaveCookieContent === 'function') {
+        return await (AppBindings as any).SaveCookieContent(content);
+      }
+      return '';
+    } catch (err) {
+      console.warn('SaveCookieContent error:', err);
+      return '';
+    }
   },
 
   updateEngine: async (): Promise<{ success: boolean; message: string; version: string }> => {

@@ -25,6 +25,8 @@ export function RemoveTask(arg1:string):Promise<void>;
 
 export function RevealFile(arg1:string):Promise<void>;
 
+export function SaveCookieContent(arg1:string):Promise<string>;
+
 export function SaveSettings(arg1:config.AppSettings):Promise<void>;
 
 export function SelectCookieFile():Promise<string>;

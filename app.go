@@ -3,6 +3,8 @@ package main
 import (
 	"context"
 	"fmt"
+	"os"
+	"path/filepath"
 
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 
@@ -148,6 +150,21 @@ func (a *App) SelectCookieFile() (string, error) {
 			{DisplayName: "Text Files (*.txt)", Pattern: "*.txt"},
 		},
 	})
+}
+
+// SaveCookieContent writes uploaded cookie content to ~/.omnidrop/cookies.txt and returns path
+func (a *App) SaveCookieContent(content string) (string, error) {
+	home, err := os.UserHomeDir()
+	configDir := "."
+	if err == nil {
+		configDir = filepath.Join(home, ".omnidrop")
+		_ = os.MkdirAll(configDir, 0755)
+	}
+	cookiePath := filepath.Join(configDir, "cookies.txt")
+	if err := os.WriteFile(cookiePath, []byte(content), 0644); err != nil {
+		return "", err
+	}
+	return cookiePath, nil
 }
 
 // UpdateEngine executes yt-dlp -U

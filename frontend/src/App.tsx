@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   Download, Settings, Folder, RefreshCw, X, Play, Trash2, CheckCircle2, 
   AlertCircle, ArrowDownToLine, Copy, Film, Music, ShieldCheck,
@@ -38,6 +38,7 @@ export default function App() {
   const [showTests, setShowTests] = useState(false);
   const [testStatuses, setTestStatuses] = useState<Record<string, TestStatus>>({});
   const [updateStatus, setUpdateStatus] = useState<string | null>(null);
+  const cookieFileInputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     // Initial data load
@@ -827,24 +828,62 @@ export default function App() {
                 </div>
 
                 <div className="flex items-center gap-2 pt-1">
+                  {/* Hidden fallback file input for browser mode or when native dialog fails */}
                   <input
-                    type="text"
-                    readOnly
-                    placeholder="No cookies or browser selected"
-                    value={settings.cookie_file || ''}
-                    className={`flex-1 ${t.inputBg} border ${t.inputBorder} rounded-xl px-3 py-2 text-xs ${t.textSecondary} font-mono truncate`}
-                  />
-                  <button
-                    onClick={async () => {
-                      const file = await bridge.selectCookieFile();
-                      if (file) {
-                        const updated = { ...settings, cookie_file: file };
+                    ref={cookieFileInputRef}
+                    type="file"
+                    accept=".txt,text/plain"
+                    className="hidden"
+                    onChange={async (e) => {
+                      const file = e.target.files?.[0];
+                      if (!file) return;
+                      try {
+                        const content = await file.text();
+                        // Try saving content to ~/.omnidrop/cookies.txt
+                        const savedPath = await bridge.saveCookieContent(content);
+                        const finalPath = savedPath || file.name;
+                        const updated = { ...settings, cookie_file: finalPath };
                         setSettings(updated);
                         bridge.saveSettings(updated);
+                      } catch (err) {
+                        console.error('Failed reading cookie file:', err);
                       }
+                      // Reset file input value so selecting the same file again triggers onChange
+                      e.target.value = '';
                     }}
-                    className={`px-3 py-2 ${t.bgSubtle} hover:${t.card} border ${t.cardBorder} rounded-xl text-xs font-semibold ${t.textSecondary}`}
-                    title="Import Netscape cookies.txt"
+                  />
+
+                  <input
+                    type="text"
+                    placeholder="Enter path (e.g. C:\cookies.txt) or select file"
+                    value={settings.cookie_file || ''}
+                    onChange={(e) => {
+                      const updated = { ...settings, cookie_file: e.target.value };
+                      setSettings(updated);
+                      bridge.saveSettings(updated);
+                    }}
+                    className={`flex-1 ${t.inputBg} border ${t.inputBorder} rounded-xl px-3 py-2 text-xs ${t.textSecondary} font-mono truncate focus:outline-none focus:border-indigo-500`}
+                  />
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      // Attempt native desktop file picker first
+                      try {
+                        const file = await bridge.selectCookieFile();
+                        if (file) {
+                          const updated = { ...settings, cookie_file: file };
+                          setSettings(updated);
+                          bridge.saveSettings(updated);
+                          return;
+                        }
+                      } catch (err) {
+                        console.warn('Native picker error, opening browser file dialog:', err);
+                      }
+                      // Fallback: trigger HTML file input for browser / web mode
+                      cookieFileInputRef.current?.click();
+                    }}
+                    className={`px-3 py-2 ${t.bgSubtle} hover:${t.card} active:scale-95 border ${t.cardBorder} rounded-xl text-xs font-semibold ${t.textSecondary} transition-all cursor-pointer`}
+                    title="Import Netscape cookies.txt file"
                   >
                     Select .txt
                   </button>

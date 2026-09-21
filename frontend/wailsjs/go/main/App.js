@@ -42,6 +42,10 @@ export function RevealFile(arg1) {
   return window['go']['main']['App']['RevealFile'](arg1);
 }
 
+export function SaveCookieContent(arg1) {
+  return window['go']['main']['App']['SaveCookieContent'](arg1);
+}
+
 export function SaveSettings(arg1) {
   return window['go']['main']['App']['SaveSettings'](arg1);
 }
